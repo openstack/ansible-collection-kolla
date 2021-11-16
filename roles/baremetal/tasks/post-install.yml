@@ -255,3 +255,17 @@
   when:
     - change_selinux | bool
     - ansible_facts.os_family == "RedHat"
+
+- name: Set https proxy for git
+  git_config:
+    name: https.proxy
+    scope: global
+    value: "{{ git_https_proxy }}"
+  when: git_https_proxy | length > 0
+
+- name: Set http proxy for git
+  git_config:
+    name: http.proxy
+    scope: global
+    value: "{{ git_http_proxy }}"
+  when: git_http_proxy | length > 0

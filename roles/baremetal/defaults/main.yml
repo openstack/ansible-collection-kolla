@@ -58,6 +58,9 @@ docker_http_proxy: ""
 docker_https_proxy: ""
 docker_no_proxy: ""
 
+git_http_proxy: ""
+git_https_proxy: ""
+
 # Version of python used to execute Ansible modules.
 host_python_version: "{{ ansible_facts.python.version.major }}.{{ ansible_facts.python.version.minor }}"
 

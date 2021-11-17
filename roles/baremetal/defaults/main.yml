@@ -1,21 +1,4 @@
 ---
-# Whether to enable a package repository for Docker.
-enable_docker_repo: "{% if ansible_facts.distribution == 'openEuler' %}false{% else %}true{% endif %}"
-
-# Docker APT repository configuration.
-docker_apt_url: "https://download.docker.com/linux/{{ ansible_facts.distribution | lower }}"
-docker_apt_repo: "deb {{ docker_apt_url }} {{ ansible_facts.distribution_release }} stable"
-docker_apt_key_file: "gpg"
-docker_apt_key_id: "0EBFCD88"
-docker_apt_package: "docker-ce"
-
-# Docker Yum repository configuration.
-docker_yum_url: "https://download.docker.com/linux/centos"
-docker_yum_baseurl: "{{ docker_yum_url }}/$releasever/$basearch/stable"
-docker_yum_gpgkey: "{{ docker_yum_url }}/gpg"
-docker_yum_gpgcheck: true
-docker_yum_package: "docker-ce"
-
 ceph_version: "pacific"
 epel_version: "8"
 ceph_url: "https://download.ceph.com"
@@ -49,32 +32,19 @@ selinux_state: "permissive"
 # If true, the host firewall service (firewalld or ufw) will be disabled.
 disable_firewall: True
 
-docker_storage_driver: ""
-docker_custom_option: ""
-docker_custom_config: "{% if ansible_facts.distribution == 'openEuler' %}{\"exec-opts\": [\"native.umask=normal\"]}{% else %}{}{% endif %}"
-
-docker_http_proxy: ""
-docker_https_proxy: ""
-docker_no_proxy: ""
-
 git_http_proxy: ""
 git_https_proxy: ""
 
 debian_pkg_install:
- - "{{ docker_apt_package }}"
  - git
  - "{% if enable_multipathd|bool %}sg3-utils-udev{% endif %}"
- - "{% if not docker_disable_default_iptables_rules | bool %}iptables{% endif %}"
 
 openeuler_pkg_install:
- - docker
  - python3-docker
 
 redhat_pkg_install:
- - "{{ docker_yum_package }}"
  - git
  - sudo
- - "{% if not docker_disable_default_iptables_rules | bool %}iptables{% endif %}"
 
 ubuntu_pkg_removals:
  - lxd
@@ -86,17 +56,6 @@ redhat_pkg_removals:
  - "{% if enable_nova_libvirt_container | bool %}libvirt{% endif %}"
  - "{% if enable_nova_libvirt_container | bool %}libvirt-daemon{% endif %}"
  - "{% if enable_nova_libvirt_container | bool %}iscsi-initiator-utils{% endif %}"
-
-# From group_vars/all.yml:
-docker_log_max_file: "5"
-docker_log_max_size: "50m"
-
-# Docker networking options
-docker_disable_default_iptables_rules: "yes"
-docker_disable_default_network: "{{ docker_disable_default_iptables_rules }}"
-docker_disable_ip_forward: "{{ docker_disable_default_iptables_rules }}"
-
-docker_runtime_directory: ""
 
 node_config_directory: "/etc/kolla"
 

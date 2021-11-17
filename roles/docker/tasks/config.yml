@@ -1,0 +1,101 @@
+---
+- name: Ensure docker config directory exists
+  file:
+    path: /etc/docker
+    state: directory
+  become: True
+
+- name: Write docker config
+  become: True
+  vars:
+    docker_config_insecure_registries:
+      insecure-registries:
+        - "{{ docker_registry }}"
+    docker_config_storage_driver:
+      storage-driver: "{{ docker_storage_driver }}"
+    docker_config_runtime_directory:
+      data-root: "{{ docker_runtime_directory }}"
+    docker_config_iptables:
+      iptables: false
+    docker_config_bridge:
+      bridge: "none"
+    docker_config_ip_forward:
+      ip-forward: false
+    docker_config: >-
+      {{ {}
+         | combine(docker_zun_config if docker_configure_for_zun | bool and 'zun-compute' in group_names else {})
+         | combine(docker_config_insecure_registries if docker_registry_insecure | bool else {})
+         | combine(docker_config_storage_driver if docker_storage_driver | length > 0 else {})
+         | combine(docker_config_runtime_directory if docker_runtime_directory | length > 0 else {})
+         | combine(docker_config_iptables if docker_disable_default_iptables_rules | bool else {})
+         | combine(docker_config_bridge if docker_disable_default_network | bool else {})
+         | combine(docker_config_ip_forward if docker_disable_ip_forward | bool else {})
+         | combine(docker_custom_config) }}
+  copy:
+    content: "{{ docker_config | to_nice_json }}"
+    dest: /etc/docker/daemon.json
+    mode: 0644
+  register: docker_configured
+
+- name: Remove old docker options file
+  become: True
+  file:
+    path: /etc/systemd/system/docker.service.d/kolla.conf
+    state: absent
+  when:
+    - not docker_configure_for_zun | bool or 'zun-compute' not in group_names
+    - not docker_http_proxy
+    - not docker_https_proxy
+    - not docker_no_proxy
+
+- name: Ensure docker service directory exists
+  become: True
+  file:
+    path: /etc/systemd/system/docker.service.d
+    state: directory
+    recurse: yes
+  when: >
+    (docker_configure_for_zun | bool and 'zun-compute' in group_names) or
+    docker_http_proxy | length > 0 or
+    docker_https_proxy | length > 0 or
+    docker_no_proxy | length > 0
+
+- name: Configure docker service
+  become: True
+  template:
+    src: docker_systemd_service.j2
+    dest: /etc/systemd/system/docker.service.d/kolla.conf
+  when: >
+    (docker_configure_for_zun | bool and 'zun-compute' in group_names) or
+    docker_http_proxy | length > 0 or
+    docker_https_proxy | length > 0 or
+    docker_no_proxy | length > 0
+
+- name: Reload docker service file
+  become: True
+  systemd:
+    name: docker
+    daemon_reload: yes
+  register: docker_reloaded
+
+- name: Start docker
+  systemd:
+    name: docker
+    state: started
+    masked: no
+  become: True
+
+- name: Restart docker
+  systemd:
+    name: docker
+    state: restarted
+    masked: no
+  become: True
+  when: docker_configured.changed or docker_reloaded.changed
+
+- name: Enable docker
+  systemd:
+    name: docker
+    enabled: yes
+    masked: no
+  become: True

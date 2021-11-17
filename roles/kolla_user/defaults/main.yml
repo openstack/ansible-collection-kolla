@@ -1,0 +1,4 @@
+---
+create_kolla_user_sudoers: true
+kolla_user: "kolla"
+kolla_group: "kolla"

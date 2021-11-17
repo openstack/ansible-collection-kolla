@@ -60,23 +60,15 @@ docker_no_proxy: ""
 git_http_proxy: ""
 git_https_proxy: ""
 
-# Version of python used to execute Ansible modules.
-host_python_version: "{{ ansible_facts.python.version.major }}.{{ ansible_facts.python.version.minor }}"
-
 debian_pkg_install:
  - "{{ docker_apt_package }}"
  - git
- - "python3-setuptools"
- - "python3-pip"
- - "{% if virtualenv is not none %}python3-virtualenv{% endif %}"
  - "{% if enable_multipathd|bool %}sg3-utils-udev{% endif %}"
  - "{% if not docker_disable_default_iptables_rules | bool %}iptables{% endif %}"
 
 redhat_pkg_install:
  - "{{ docker_yum_package }}"
  - git
- - "python3-pip"
- - "{% if virtualenv is not none %}python3-virtualenv{% endif %}"
  - sudo
  - "{% if not docker_disable_default_iptables_rules | bool %}iptables{% endif %}"
 
@@ -90,15 +82,6 @@ redhat_pkg_removals:
  - "{% if enable_nova_libvirt_container | bool %}libvirt{% endif %}"
  - "{% if enable_nova_libvirt_container | bool %}libvirt-daemon{% endif %}"
  - iscsi-initiator-utils
-
-# Path to a virtualenv in which to install python packages. If None, a
-# virtualenv will not be used.
-virtualenv:
-
-# Whether the virtualenv will inherit packages from the global site-packages
-# directory. This is typically required for modules such as yum and apt which
-# are not available on PyPI.
-virtualenv_site_packages: True
 
 # From group_vars/all.yml:
 docker_log_max_file: "5"

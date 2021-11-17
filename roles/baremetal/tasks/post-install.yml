@@ -3,17 +3,8 @@
     name: openstack.kolla.kolla_user
   when: create_kolla_user | bool
 
-- name: Ensure virtualenv has correct ownership
-  file:
-    path: "{{ virtualenv }}"
-    recurse: True
-    state: directory
-    owner: "{{ kolla_user }}"
-    group: "{{ kolla_group }}"
-  become: True
-  when:
-    - create_kolla_user | bool
-    - virtualenv is not none
+- import_role:
+    name: openstack.kolla.docker_sdk
 
 - name: Ensure node_config_directory directory exists
   file:

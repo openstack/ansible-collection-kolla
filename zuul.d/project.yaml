@@ -1,6 +1,6 @@
 ---
 - project:
     templates:
-      - noop-jobs
+      - publish-openstack-docs-pti
     gate:
       queue: kolla

@@ -1,0 +1,30 @@
+---
+namespace: openstack
+name: kolla
+version: 1.0.0
+readme: README.md
+authors: OpenStack
+description: Ansible collection for the OpenStack Kolla project
+license:
+  - GPL-3.0-or-later
+tags:
+  - cloud
+  - kolla
+  - openstack
+dependencies: {}
+repository: https://opendev.org/openstack/ansible-collection-kolla
+documentation: https://opendev.org/openstack/ansible-collection-kolla/src/branch/master/README.md
+homepage: https://opendev.org/openstack/ansible-collection-kolla
+issues: https://launchpad.net/ansible-collection-kolla
+build_ignore:
+  - "*.tar.gz"
+  - requirements.txt
+  - setup.cfg
+  - setup.py
+  - test-requirements.txt
+  - tox.ini
+  - zuul.d
+  - .gitignore
+  - .gitreview
+  - .stestr.conf
+  - .tox

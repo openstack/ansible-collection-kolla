@@ -1,0 +1,6 @@
+[run]
+branch = True
+source = ansible-collection-kolla
+
+[report]
+ignore_errors = True

@@ -1,0 +1,6 @@
+---
+- project:
+    templates:
+      - noop-jobs
+    gate:
+      queue: kolla

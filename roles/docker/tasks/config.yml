@@ -76,6 +76,28 @@
   notify:
     - Reload docker service file
 
+- name: Ensure the path for CA file for private registry exists
+  file:
+    path: "/etc/docker/certs.d/{{ docker_registry }}"
+    owner: root
+    group: root
+    mode: 0700
+    state: directory
+  become: True
+  when: docker_registry is not none and docker_registry_ca is not none
+
+- name: Ensure the CA file for private registry exists
+  copy:
+    src: "{{ docker_registry_ca }}"
+    dest: "/etc/docker/certs.d/{{ docker_registry }}/ca.crt"
+    owner: root
+    group: root
+    mode: 0600
+  become: True
+  when: docker_registry is not none and docker_registry_ca is not none
+  notify:
+    - Restart docker
+
 - name: Flush handlers
   meta: flush_handlers
 

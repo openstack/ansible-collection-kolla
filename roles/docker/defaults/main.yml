@@ -45,6 +45,9 @@ docker_runtime_directory: ""
 docker_registry:
 docker_registry_insecure: false
 
+# Path to a CA file for Docker registry
+docker_registry_ca:
+
 # Whether to configure Docker and containerd for Zun.
 docker_configure_for_zun: false
 containerd_configure_for_zun: "{{ docker_configure_for_zun | bool }}"

@@ -1,6 +1,7 @@
 ---
 - project:
     templates:
+      - ansible-role-jobs
       - publish-openstack-docs-pti
     gate:
       queue: kolla

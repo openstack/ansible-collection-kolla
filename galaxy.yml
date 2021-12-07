@@ -18,10 +18,13 @@ homepage: https://opendev.org/openstack/ansible-collection-kolla
 issues: https://launchpad.net/ansible-collection-kolla
 build_ignore:
   - "*.tar.gz"
+  - doc
+  - releasenotes
   - requirements.txt
   - setup.cfg
   - setup.py
   - test-requirements.txt
+  - tools
   - tox.ini
   - zuul.d
   - .gitignore

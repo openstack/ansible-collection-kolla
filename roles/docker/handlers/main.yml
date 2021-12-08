@@ -1,0 +1,21 @@
+---
+- name: Reload docker service file
+  become: True
+  systemd:
+    name: docker
+    daemon_reload: yes
+  notify:
+    - Restart docker
+
+- name: Restart docker
+  systemd:
+    name: docker
+    state: restarted
+    masked: no
+  become: True
+
+- name: Restart containerd
+  service:
+    name: containerd
+    state: restarted
+  become: True

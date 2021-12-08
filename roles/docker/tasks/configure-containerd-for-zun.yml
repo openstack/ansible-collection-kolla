@@ -16,7 +16,8 @@
     owner: "{{ config_owner_user }}"
     group: "{{ config_owner_group }}"
   become: True
-  register: cni_configured
+  notify:
+    - Restart containerd
 
 - name: Ensuring CNI bin directory exist
   file:
@@ -40,11 +41,5 @@
     dest: "/etc/containerd/config.toml"
     mode: "0660"
   become: true
-  register: containerd_configured
-
-- name: Restart containerd
-  service:
-    name: containerd
-    state: restarted
-  become: True
-  when: cni_configured.changed or containerd_configured.changed
+  notify:
+    - Restart containerd

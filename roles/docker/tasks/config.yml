@@ -35,7 +35,8 @@
     content: "{{ docker_config | to_nice_json }}"
     dest: /etc/docker/daemon.json
     mode: 0644
-  register: docker_configured
+  notify:
+    - Restart docker
 
 - name: Remove old docker options file
   become: True
@@ -47,6 +48,8 @@
     - not docker_http_proxy
     - not docker_https_proxy
     - not docker_no_proxy
+  notify:
+    - Reload docker service file
 
 - name: Ensure docker service directory exists
   become: True
@@ -70,32 +73,16 @@
     docker_http_proxy | length > 0 or
     docker_https_proxy | length > 0 or
     docker_no_proxy | length > 0
+  notify:
+    - Reload docker service file
 
-- name: Reload docker service file
-  become: True
-  systemd:
-    name: docker
-    daemon_reload: yes
-  register: docker_reloaded
+- name: Flush handlers
+  meta: flush_handlers
 
-- name: Start docker
+- name: Start and enable docker
   systemd:
     name: docker
     state: started
-    masked: no
-  become: True
-
-- name: Restart docker
-  systemd:
-    name: docker
-    state: restarted
-    masked: no
-  become: True
-  when: docker_configured.changed or docker_reloaded.changed
-
-- name: Enable docker
-  systemd:
-    name: docker
     enabled: yes
     masked: no
   become: True

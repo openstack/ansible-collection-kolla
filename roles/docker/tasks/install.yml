@@ -12,23 +12,22 @@
 
 # APT starts Docker engine right after installation, which creates
 # iptables rules before we disable iptables in Docker config
+- block:
+    - name: Check if docker systemd unit exists
+      stat:
+        path: /etc/systemd/system/docker.service
+      register: docker_unit_file
 
-- name: Check if docker systemd unit exists
-  stat:
-    path: /etc/systemd/system/docker.service
-  register: docker_unit_file
-
-- name: Mask the docker systemd unit on Debian/Ubuntu
-  file:
-    src: /dev/null
-    dest: /etc/systemd/system/docker.service
-    owner: root
-    group: root
-    state: link
-  become: true
-  when:
-    - ansible_facts.os_family == 'Debian'
-    - not docker_unit_file.stat.exists
+    - name: Mask the docker systemd unit on Debian/Ubuntu
+      file:
+        src: /dev/null
+        dest: /etc/systemd/system/docker.service
+        owner: root
+        group: root
+        state: link
+      become: true
+      when: not docker_unit_file.stat.exists
+  when: ansible_facts.os_family == 'Debian'
 
 - name: Install packages
   package:

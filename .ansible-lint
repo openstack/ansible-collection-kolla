@@ -13,3 +13,7 @@ skip_list:
   # [ignore-errors] Use failed_when and specify error conditions instead of using ignore_errors
   # FIXME(mgoddard): Use failed_when instead of ignore_errors
   - ignore-errors
+  # Package installs should not use latest
+  - package-latest
+  # Commands should not change things if nothing needs doing
+  - no-changed-when

@@ -1,6 +1,6 @@
 ---
 # Whether to enable a package repository for Docker.
-enable_docker_repo: true
+enable_docker_repo: "{% if ansible_facts.distribution == 'openEuler' %}false{% else %}true{% endif %}"
 
 # Docker APT repository configuration.
 docker_apt_url: "https://download.docker.com/linux/{{ ansible_facts.distribution | lower }}"
@@ -51,7 +51,7 @@ disable_firewall: True
 
 docker_storage_driver: ""
 docker_custom_option: ""
-docker_custom_config: {}
+docker_custom_config: "{% if ansible_facts.distribution == 'openEuler' %}{\"exec-opts\": [\"native.umask=normal\"]}{% else %}{}{% endif %}"
 
 docker_http_proxy: ""
 docker_https_proxy: ""
@@ -71,6 +71,10 @@ debian_pkg_install:
  - "{% if virtualenv is not none %}python3-virtualenv{% endif %}"
  - "{% if enable_multipathd|bool %}sg3-utils-udev{% endif %}"
  - "{% if not docker_disable_default_iptables_rules | bool %}iptables{% endif %}"
+
+openeuler_pkg_install:
+ - docker
+ - python3-docker
 
 redhat_pkg_install:
  - "{{ docker_yum_package }}"

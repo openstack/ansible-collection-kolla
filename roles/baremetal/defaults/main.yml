@@ -84,12 +84,12 @@ redhat_pkg_install:
 ubuntu_pkg_removals:
  - lxd
  - lxc
- - libvirt-bin
+ - "{% if enable_nova_libvirt_container | bool %}libvirt-bin{% endif %}"
  - open-iscsi
 
 redhat_pkg_removals:
- - libvirt
- - libvirt-daemon
+ - "{% if enable_nova_libvirt_container | bool %}libvirt{% endif %}"
+ - "{% if enable_nova_libvirt_container | bool %}libvirt-daemon{% endif %}"
  - iscsi-initiator-utils
 
 # Path to a virtualenv in which to install python packages. If None, a
@@ -113,3 +113,9 @@ docker_disable_ip_forward: "{{ docker_disable_default_iptables_rules }}"
 docker_runtime_directory: ""
 
 node_config_directory: "/etc/kolla"
+
+# Whether the nova_libvirt container is enabled.
+enable_nova_libvirt_container: false
+
+# Whether to remove the AppArmor libvirt profile on Ubuntu hosts.
+apparmor_remove_libvirt_profile: "{{ enable_nova_libvirt_container | bool }}"

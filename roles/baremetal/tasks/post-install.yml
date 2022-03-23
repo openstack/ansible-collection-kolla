@@ -1,31 +1,7 @@
 ---
-- name: Create kolla user
-  user:
-    name: "{{ kolla_user }}"
-    state: present
-    group: "{{ kolla_group }}"
-    groups: "sudo"
-    append: true
-  become: True
+- import_role:
+    name: openstack.kolla.kolla_user
   when: create_kolla_user | bool
-
-- name: Add public key to kolla user authorized keys
-  authorized_key:
-    user: "{{ kolla_user }}"
-    key: "{{ kolla_ssh_key.public_key }}"
-  become: True
-  when: create_kolla_user | bool
-
-- name: Grant kolla user passwordless sudo
-  lineinfile:
-    dest: /etc/sudoers.d/kolla-ansible-users
-    state: present
-    create: yes
-    mode: '0640'
-    regexp: '^{{ kolla_user }}'
-    line: '{{ kolla_user }} ALL=(ALL) NOPASSWD: ALL'
-  become: True
-  when: create_kolla_user_sudoers | bool
 
 - name: Ensure virtualenv has correct ownership
   file:
@@ -35,25 +11,18 @@
     owner: "{{ kolla_user }}"
     group: "{{ kolla_group }}"
   become: True
-  when: virtualenv is not none
-
-- name: Ensure node_config_directory directory exists for user kolla
-  file:
-    path: "{{ node_config_directory }}"
-    state: directory
-    owner: "{{ kolla_user }}"
-    group: "{{ kolla_group }}"
-    mode: 0755
-  become: True
-  when: create_kolla_user | bool
+  when:
+    - create_kolla_user | bool
+    - virtualenv is not none
 
 - name: Ensure node_config_directory directory exists
   file:
     path: "{{ node_config_directory }}"
     state: directory
+    owner: "{{ kolla_user if create_kolla_user | bool else omit }}"
+    group: "{{ kolla_group if create_kolla_user | bool else omit }}"
     mode: 0755
   become: True
-  when: not create_kolla_user | bool
 
 - name: Ensure docker config directory exists
   file:
@@ -212,19 +181,6 @@
   when:
     - ansible_facts.distribution == "Ubuntu"
     - apparmor_remove_libvirt_profile | bool
-
-- name: Create docker group
-  group:
-    name: docker
-  become: True
-
-- name: Add kolla user to docker group
-  user:
-    name: "{{ kolla_user }}"
-    append: yes
-    groups: docker
-  become: True
-  when: create_kolla_user | bool
 
 - name: Start docker
   systemd:

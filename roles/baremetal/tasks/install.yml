@@ -90,7 +90,18 @@
     state: present
     update_cache: yes
   become: True
-  when: ansible_facts.os_family == 'RedHat'
+  when:
+    - ansible_facts.os_family == 'RedHat'
+    - ansible_facts.distribution != 'openEuler'
+  register: rpm_install_result
+
+- name: Install RPM packages for openEuler
+  package:
+    name: "{{ (openeuler_pkg_install | join(' ')).split() }}"
+    state: present
+    update_cache: yes
+  become: True
+  when: ansible_facts.distribution == 'openEuler'
   register: rpm_install_result
 
 # If any packages were updated, and any containers were running, wait for the

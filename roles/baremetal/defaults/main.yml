@@ -85,7 +85,7 @@ ubuntu_pkg_removals:
 redhat_pkg_removals:
  - "{% if enable_nova_libvirt_container | bool %}libvirt{% endif %}"
  - "{% if enable_nova_libvirt_container | bool %}libvirt-daemon{% endif %}"
- - iscsi-initiator-utils
+ - "{% if enable_nova_libvirt_container | bool %}iscsi-initiator-utils{% endif %}"
 
 # From group_vars/all.yml:
 docker_log_max_file: "5"

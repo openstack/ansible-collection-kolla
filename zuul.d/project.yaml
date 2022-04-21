@@ -7,6 +7,8 @@
       jobs:
         - kolla-ansible-centos8s-source
         - kolla-ansible-debian-source
+        - kolla-ansible-openeuler-source
+        - kolla-ansible-rocky8-source
         - kolla-ansible-ubuntu-source
         - kayobe-overcloud-centos8s
         - kayobe-overcloud-ubuntu-focal

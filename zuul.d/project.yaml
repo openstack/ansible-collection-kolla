@@ -1,5 +1,6 @@
 ---
 - project:
+    queue: kolla
     templates:
       - ansible-role-jobs
       - publish-openstack-docs-pti
@@ -15,7 +16,6 @@
         - kayobe-overcloud-host-configure-centos8s
         - kayobe-overcloud-host-configure-ubuntu-focal
     gate:
-      queue: kolla
       jobs:
         - kolla-ansible-centos8s-source
         - kolla-ansible-debian-source

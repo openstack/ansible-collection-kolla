@@ -1,10 +1,4 @@
 ---
-- name: Update apt cache
-  apt:
-    update_cache: yes
-  become: True
-  when: ansible_facts.os_family == 'Debian'
-
 # TODO(inc0): Gates don't seem to have ufw executable, check for it instead of ignore errors
 - block:
     - name: Set firewall default policy
@@ -37,52 +31,8 @@
         - firewalld_check.rc == 0
   when: disable_firewall | bool
 
-- name: Install apt packages
-  package:
-    name: "{{ (debian_pkg_install | join(' ')).split() }}"
-    state: present
-  become: True
-  when: ansible_facts.os_family == 'Debian'
-
-- name: Install deltarpm packages
-  package:
-    name: drpm
-    state: present
-    update_cache: yes
-  become: True
-  when: ansible_facts.os_family == 'RedHat'
-
-- name: Install RPM packages
-  package:
-    name: "{{ (redhat_pkg_install | join(' ')).split() }}"
-    state: present
-    update_cache: yes
-  become: True
-  when:
-    - ansible_facts.os_family == 'RedHat'
-    - ansible_facts.distribution != 'openEuler'
-
-- name: Install RPM packages for openEuler
-  package:
-    name: "{{ (openeuler_pkg_install | join(' ')).split() }}"
-    state: present
-    update_cache: yes
-  become: True
-  when: ansible_facts.distribution == 'openEuler'
+- import_role:
+    name: openstack.kolla.packages
 
 - import_role:
     name: openstack.kolla.docker
-
-- name: Remove packages
-  package:
-    name: "{{ (ubuntu_pkg_removals | join(' ')).split() }}"
-    state: absent
-  become: True
-  when: ansible_facts.os_family == 'Debian'
-
-- name: Remove packages
-  package:
-    name: "{{ (redhat_pkg_removals | join(' ')).split() }}"
-    state: absent
-  become: True
-  when: ansible_facts.os_family == 'RedHat'

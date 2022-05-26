@@ -35,28 +35,6 @@ disable_firewall: True
 git_http_proxy: ""
 git_https_proxy: ""
 
-debian_pkg_install:
- - git
- - "{% if enable_multipathd|bool %}sg3-utils-udev{% endif %}"
-
-openeuler_pkg_install:
- - python3-docker
-
-redhat_pkg_install:
- - git
- - sudo
-
-ubuntu_pkg_removals:
- - lxd
- - lxc
- - "{% if enable_nova_libvirt_container | bool %}libvirt-bin{% endif %}"
- - open-iscsi
-
-redhat_pkg_removals:
- - "{% if enable_nova_libvirt_container | bool %}libvirt{% endif %}"
- - "{% if enable_nova_libvirt_container | bool %}libvirt-daemon{% endif %}"
- - "{% if enable_nova_libvirt_container | bool %}iscsi-initiator-utils{% endif %}"
-
 node_config_directory: "/etc/kolla"
 
 # Whether the nova_libvirt container is enabled.

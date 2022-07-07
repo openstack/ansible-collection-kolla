@@ -34,3 +34,5 @@ git_http_proxy: ""
 git_https_proxy: ""
 
 node_config_directory: "/etc/kolla"
+
+container_engine: "{{ kolla_container_engine | default('docker') }}"

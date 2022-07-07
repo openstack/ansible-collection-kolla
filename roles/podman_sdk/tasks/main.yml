@@ -1,0 +1,70 @@
+---
+- name: Configure osbpo apt repository
+  block:
+    - name: Ensure apt sources list directory exists
+      file:
+        path: /etc/apt/sources.list.d
+        state: directory
+        recurse: yes
+      become: True
+
+    - name: Ensure apt keyrings directory exists
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        recurse: yes
+      become: True
+
+    - name: Install osbpo apt gpg key
+      template:
+        src: osbpo_pubkey.gpg.j2
+        dest: /etc/apt/keyrings/osbpo.asc
+        mode: "0644"
+      become: True
+
+    - name: Enable osbpo apt repository
+      apt_repository:
+        repo: "{{ podman_sdk_osbpo_apt_repo }}"
+        filename: osbpo
+      become: True
+  when:
+    - ansible_facts.os_family == 'Debian'
+    - virtualenv is none
+
+- name: Install packages
+  package:
+    name: "{{ podman_sdk_packages | select | list }}"
+    cache_valid_time: "{{ apt_cache_valid_time if ansible_facts.os_family == 'Debian' else omit }}"
+    update_cache: "{{ True if ansible_facts.os_family == 'Debian' else omit }}"
+    state: present
+  become: true
+
+- name: Install latest pip in the virtualenv
+  pip:
+    # NOTE(hrw) pip 19.3 is first version complaining about being run with Python 2
+    name: pip>19.3
+    virtualenv: "{{ virtualenv }}"
+    virtualenv_site_packages: "{{ virtualenv_site_packages }}"
+    virtualenv_command: "python{{ host_python_version }} -m venv"
+  become: true
+  become_user: "{{ podman_sdk_virtualenv_owner }}"
+  when: virtualenv is not none
+
+- name: Install podman SDK for python
+  pip:
+    name: "{{ podman_sdk_pip_packages }}"
+    executable: "{{ virtualenv is none | ternary('pip3', omit) }}"
+    extra_args: "{% if podman_sdk_upper_constraints_file %}-c {{ podman_sdk_upper_constraints_file }}{% endif %}"
+    virtualenv: "{{ virtualenv is none | ternary(omit, virtualenv) }}"
+    virtualenv_site_packages: "{{ virtualenv is none | ternary(omit, virtualenv_site_packages) }}"
+    virtualenv_command: "{{ virtualenv is none | ternary(omit, 'python' ~ host_python_version ~ ' -m venv') }}"
+  become: true
+  become_user: "{{ virtualenv is none | ternary(omit, podman_sdk_virtualenv_owner) }}"
+  when: not (ansible_facts.distribution_release == "bookworm" and virtualenv is none)
+
+- name: Start podman.socket
+  become: true
+  service:
+    name: podman.socket
+    state: started
+    enabled: yes

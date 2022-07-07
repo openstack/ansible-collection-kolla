@@ -1,0 +1,19 @@
+---
+# APT cache TTL in seconds.
+apt_cache_valid_time: 3600
+
+# List of packages to install.
+podman_packages:
+  - "podman"
+
+# Podman config variables
+podman_storage_driver:
+podman_runtime_directory:
+
+# Podman can work with docker registries so it can stay this way
+# URL of private registry
+private_registry:
+private_registry_insecure: false
+
+# Path to a CA file for Docker registry
+private_registry_ca:

@@ -1,0 +1,64 @@
+---
+- name: Ensure podman config directory exists
+  file:
+    path: /etc/containers/{{ item }}
+    state: directory
+    mode: 0755
+  become: True
+  with_items:
+    - "containers.conf.d"
+    - "registries.conf.d"
+    - "storage.conf.d"
+
+- name: Write registries config
+  become: True
+  vars:
+    registry: |
+      [[registry]]
+      location = "{{ private_registry }}"
+      insecure = {{ private_registry_insecure | bool }}
+  copy:
+    content: "{{ registry }}"
+    dest: /etc/containers/registries.conf.d/registries.conf
+    mode: 0644
+  when: private_registry is not none
+
+- name: Write storage config
+  become: True
+  vars:
+    config: |
+      {% if podman_storage_driver is not none %}
+      driver = {{ podman_storage_driver }}
+      {% endif %}
+      {% if podman_runtime_directory is not none %}
+      runroot = {{ podman_runtime_directory }}
+      {% endif %}
+  copy:
+    content: "{{ config }}"
+    dest: /etc/containers/storage.conf.d/storage.conf
+    mode: 0644
+  when: podman_storage_driver is not none or podman_runtime_directory is not none
+
+- name: Ensure the path for CA file for private registry exists
+  file:
+    path: "/etc/containers/certs.d/{{ private_registry }}"
+    owner: root
+    group: root
+    mode: 0700
+    state: directory
+  become: True
+  when:
+    - private_registry is not none
+    - private_registry_ca is not none
+
+- name: Ensure the CA file for private registry exists
+  copy:
+    src: "{{ private_registry_ca }}"
+    dest: "/etc/containers/certs.d/{{ private_registry }}/ca.crt"
+    owner: root
+    group: root
+    mode: 0600
+  become: True
+  when:
+    - private_registry is not none
+    - private_registry_ca is not none

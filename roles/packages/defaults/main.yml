@@ -10,6 +10,7 @@ enable_nova_libvirt_container: false
 ubuntu_pkg_install:
  - git
  - "{% if enable_multipathd|bool %}sg3-utils-udev{% endif %}"
+ - tzdata
 
 openeuler_pkg_install:
  - python3-docker

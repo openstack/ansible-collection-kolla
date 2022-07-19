@@ -66,6 +66,7 @@ debian_pkg_install:
  - iputils-ping
  - "{% if enable_multipathd|bool %}sg3-utils-udev{% endif %}"
  - "{% if not docker_disable_default_iptables_rules | bool %}iptables{% endif %}"
+ - tzdata
 
 openeuler_pkg_install:
  - docker

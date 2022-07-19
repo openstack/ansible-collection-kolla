@@ -6,10 +6,7 @@
       - publish-openstack-docs-pti
     check:
       jobs:
-        - kolla-ansible-centos8s-source
         - kolla-ansible-debian-source
-        - kolla-ansible-openeuler-source
-        - kolla-ansible-rocky8-source
         - kolla-ansible-ubuntu-source
         - kayobe-overcloud-centos8s
         - kayobe-overcloud-ubuntu-focal
@@ -17,10 +14,7 @@
         - kayobe-overcloud-host-configure-ubuntu-focal
     gate:
       jobs:
-        - kolla-ansible-centos8s-source
         - kolla-ansible-debian-source
         - kolla-ansible-ubuntu-source
-        - kayobe-overcloud-centos8s
         - kayobe-overcloud-ubuntu-focal
-        - kayobe-overcloud-host-configure-centos8s
         - kayobe-overcloud-host-configure-ubuntu-focal

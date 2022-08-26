@@ -63,6 +63,7 @@ git_https_proxy: ""
 debian_pkg_install:
  - "{{ docker_apt_package }}"
  - git
+ - iputils-ping
  - "{% if enable_multipathd|bool %}sg3-utils-udev{% endif %}"
  - "{% if not docker_disable_default_iptables_rules | bool %}iptables{% endif %}"
 
@@ -73,6 +74,7 @@ openeuler_pkg_install:
 redhat_pkg_install:
  - "{{ docker_yum_package }}"
  - git
+ - iputils
  - sudo
  - "{% if not docker_disable_default_iptables_rules | bool %}iptables{% endif %}"
 

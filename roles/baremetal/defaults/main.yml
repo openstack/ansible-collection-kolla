@@ -20,7 +20,7 @@ epel_yum_package: "epel-release"
 
 customize_etc_hosts: True
 
-create_kolla_user: True
+create_kolla_user: False
 
 kolla_user: "kolla"
 kolla_group: "kolla"

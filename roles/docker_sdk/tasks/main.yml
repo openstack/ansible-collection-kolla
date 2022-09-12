@@ -13,7 +13,7 @@
     name: pip>19.3
     virtualenv: "{{ virtualenv }}"
     virtualenv_site_packages: "{{ virtualenv_site_packages }}"
-    virtualenv_python: "python{{ host_python_version }}"
+    virtualenv_command: "python{{ host_python_version }} -m venv"
   become: true
   become_user: "{{ docker_sdk_virtualenv_owner }}"
   when: virtualenv is not none
@@ -25,6 +25,6 @@
     extra_args: "{% if docker_sdk_upper_constraints_file %}-c {{ docker_sdk_upper_constraints_file }}{% endif %}"
     virtualenv: "{{ virtualenv is none | ternary(omit, virtualenv) }}"
     virtualenv_site_packages: "{{ virtualenv is none | ternary(omit, virtualenv_site_packages) }}"
-    virtualenv_python: "{{ virtualenv is none | ternary(omit, 'python' ~ host_python_version) }}"
+    virtualenv_command: "{{ virtualenv is none | ternary(omit, 'python' ~ host_python_version ~ ' -m venv') }}"
   become: true
   become_user: "{{ virtualenv is none | ternary(omit, docker_sdk_virtualenv_owner) }}"

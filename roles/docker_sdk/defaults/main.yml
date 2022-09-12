@@ -3,7 +3,6 @@
 docker_sdk_packages:
   - "python3-setuptools"
   - "python3-pip"
-  - "{% if virtualenv is not none %}python3-virtualenv{% endif %}"
 
 # List of Python packages to install via Pip.
 # NOTE(hrw) docker 2.4.2 is in kolla-ansible requirements

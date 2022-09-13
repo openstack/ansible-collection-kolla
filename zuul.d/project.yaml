@@ -9,9 +9,7 @@
         - kolla-ansible-debian-source
         - kolla-ansible-rocky9-source
         - kolla-ansible-ubuntu-source
-        - kayobe-overcloud-centos8s
         - kayobe-overcloud-ubuntu-jammy
-        - kayobe-overcloud-host-configure-centos8s
         - kayobe-overcloud-host-configure-ubuntu-jammy
     gate:
       jobs:

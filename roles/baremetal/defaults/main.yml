@@ -1,6 +1,6 @@
 ---
-ceph_version: "pacific"
-epel_version: "8"
+ceph_version: "quincy"
+epel_version: "9"
 ceph_url: "https://download.ceph.com"
 
 # Ceph APT repository configuration.

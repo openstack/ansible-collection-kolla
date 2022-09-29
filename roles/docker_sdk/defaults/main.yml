@@ -25,7 +25,7 @@ virtualenv:
 # are not available on PyPI.
 virtualenv_site_packages: True
 
-create_kolla_user: True
+create_kolla_user: False
 kolla_user: "kolla"
 
 # Owner of the virtualenv.

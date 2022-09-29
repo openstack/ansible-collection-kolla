@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    ``create_kolla_user`` is set to ``False`` by default so that no user
+    is created as it is not used further by default.

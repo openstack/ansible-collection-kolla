@@ -10,7 +10,7 @@
 - name: Restart docker
   systemd:
     name: docker
-    state: restarted
+    state: "{{ 'reloaded' if docker_systemd_reload | bool else 'restarted' }}"
     masked: no
   become: True
 

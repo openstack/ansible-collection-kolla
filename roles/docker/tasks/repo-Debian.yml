@@ -16,11 +16,19 @@
     recurse: yes
   become: True
 
+- name: Ensure apt keyrings directory exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    recurse: yes
+  become: True
+
 - name: Install docker apt gpg key
-  apt_key:
+  get_url:
     url: "{{ docker_apt_url }}/{{ docker_apt_key_file }}"
-    id: "{{ docker_apt_key_id }}"
-    state: present
+    dest: "/etc/apt/keyrings/docker.asc"
+    mode: "0644"
+    force: true
   become: True
 
 - name: Enable docker apt repository

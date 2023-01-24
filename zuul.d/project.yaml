@@ -6,15 +6,15 @@
       - publish-openstack-docs-pti
     check:
       jobs:
-        - kolla-ansible-debian-source
-        - kolla-ansible-rocky9-source
-        - kolla-ansible-ubuntu-source
+        - kolla-ansible-debian
+        - kolla-ansible-rocky9
+        - kolla-ansible-ubuntu
         - kayobe-overcloud-ubuntu-jammy
         - kayobe-overcloud-host-configure-ubuntu-jammy
     gate:
       jobs:
-        - kolla-ansible-debian-source
-        - kolla-ansible-rocky9-source
-        - kolla-ansible-ubuntu-source
+        - kolla-ansible-debian
+        - kolla-ansible-rocky9
+        - kolla-ansible-ubuntu
         - kayobe-overcloud-ubuntu-jammy
         - kayobe-overcloud-host-configure-ubuntu-jammy

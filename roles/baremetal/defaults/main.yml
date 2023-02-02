@@ -61,6 +61,7 @@ git_http_proxy: ""
 git_https_proxy: ""
 
 debian_pkg_install:
+ - apparmor
  - "{{ docker_apt_package }}"
  - git
  - iputils-ping

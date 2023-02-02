@@ -22,6 +22,7 @@ docker_yum_package: "{% if ansible_facts.distribution == 'openEuler' %}docker{% 
 # List of packages to install.
 docker_packages:
   - "{{ docker_apt_package if ansible_facts.os_family == 'Debian' else docker_yum_package }}"
+  - "{% if ansible_facts.os_family == 'Debian' %}apparmor{% endif %}"
   - "{% if not docker_disable_default_iptables_rules | bool %}iptables{% endif %}"
 
 docker_storage_driver: ""

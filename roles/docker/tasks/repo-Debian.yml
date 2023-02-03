@@ -23,6 +23,16 @@
     state: present
   become: True
 
+- name: Install docker apt pin
+  copy:
+    dest: "/etc/apt/preferences.d/docker"
+    content: |
+        Package: {{ docker_apt_package }}
+        Pin: version {{ docker_apt_package_pin }}
+        Pin-Priority: 1000
+  become: True
+  when: docker_apt_package_pin | length > 0
+
 - name: Enable docker apt repository
   apt_repository:
     repo: "{{ docker_apt_repo }}"

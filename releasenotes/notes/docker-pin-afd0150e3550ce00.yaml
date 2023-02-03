@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Add support for pinning docker package versions by setting
+    ``docker_apt_package_pin`` or ``docker_yum_package_pin``.

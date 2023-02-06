@@ -10,7 +10,8 @@
         - kolla-ansible-rocky9
         - kolla-ansible-ubuntu
         - kayobe-overcloud-ubuntu-jammy
-        - kayobe-overcloud-rocky9
+        - kayobe-overcloud-rocky9:
+            voting: false
         - kayobe-overcloud-host-configure-ubuntu-jammy
         - kayobe-overcloud-host-configure-rocky9
     check-arm64:

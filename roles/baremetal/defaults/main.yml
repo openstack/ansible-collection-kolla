@@ -102,6 +102,11 @@ docker_disable_ip_forward: "{{ docker_disable_default_iptables_rules }}"
 
 docker_runtime_directory: ""
 
+# NOTE(mnasiadka): Lower 1073741816 nofile limit on EL9 (RHEL9/CentOS Stream 9/Rocky Linux 9)
+docker_ulimit_nofile: "{{ ansible_facts.os_family == 'RedHat' and ansible_facts.distribution_major_version == '9' }}"
+docker_ulimit_nofile_hard: 1048576
+docker_ulimit_nofile_soft: 1048576
+
 node_config_directory: "/etc/kolla"
 
 # Whether the nova_libvirt container is enabled.

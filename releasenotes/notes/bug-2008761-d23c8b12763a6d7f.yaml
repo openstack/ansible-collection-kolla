@@ -1,0 +1,9 @@
+---
+fixes:
+  - |
+    Fixes a problem where containers that do not set a reasonable nofiles
+    ulimit (e.g. ceph currently) fail to work properly due to the new 1b
+    systemd nofiles ulimit for RHEL9 and clones.
+    The default nofiles ulimit for Docker containers is now set to 1048576
+    on EL9 hosts.
+    `LP#2008761 <https://launchpad.net/bugs/[2008761]>`__

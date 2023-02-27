@@ -21,6 +21,12 @@
       bridge: "none"
     docker_config_ip_forward:
       ip-forward: false
+    docker_config_ulimit_nofile:
+      default-ulimits:
+        nofile:
+          name: nofile
+          hard: "{{ docker_ulimit_nofile_hard }}"
+          soft: "{{ docker_ulimit_nofile_soft }}"
     docker_config: >-
       {{ {}
          | combine(docker_zun_config if docker_configure_for_zun | bool and 'zun-compute' in group_names else {})
@@ -30,6 +36,7 @@
          | combine(docker_config_iptables if docker_disable_default_iptables_rules | bool else {})
          | combine(docker_config_bridge if docker_disable_default_network | bool else {})
          | combine(docker_config_ip_forward if docker_disable_ip_forward | bool else {})
+         | combine(docker_config_ulimit_nofile if docker_ulimit_nofile | bool else {})
          | combine(docker_custom_config) }}
   copy:
     content: "{{ docker_config | to_nice_json }}"

@@ -8,17 +8,23 @@
       jobs:
         - kolla-ansible-centos8s-source
         - kolla-ansible-debian-source
+        - kolla-ansible-rocky9-source
         - kolla-ansible-ubuntu-source
         - kayobe-overcloud-centos8s
+        - kayobe-overcloud-rocky9
         - kayobe-overcloud-ubuntu-focal
         - kayobe-overcloud-host-configure-centos8s
+        - kayobe-overcloud-host-configure-rocky9
         - kayobe-overcloud-host-configure-ubuntu-focal
     gate:
       jobs:
         - kolla-ansible-centos8s-source
         - kolla-ansible-debian-source
+        - kolla-ansible-rocky9-source
         - kolla-ansible-ubuntu-source
         - kayobe-overcloud-centos8s
+        - kayobe-overcloud-rocky9
         - kayobe-overcloud-ubuntu-focal
         - kayobe-overcloud-host-configure-centos8s
+        - kayobe-overcloud-host-configure-rocky9
         - kayobe-overcloud-host-configure-ubuntu-focal

@@ -1,4 +1,7 @@
 ---
+- import_role:
+    name: openstack.kolla.etc_hosts
+
 - import_tasks: pre-install.yml
 
 - import_tasks: install.yml

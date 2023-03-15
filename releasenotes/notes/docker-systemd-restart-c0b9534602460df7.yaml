@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Adds ``docker_systemd_reload`` variable (defaults to ``false``),
+    that changes restart task behaviour to reload docker instead
+    when set to ``true``.

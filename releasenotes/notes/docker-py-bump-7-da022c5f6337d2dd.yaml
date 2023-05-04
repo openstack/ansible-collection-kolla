@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    ``docker-py`` SDK library version has been bumped to >=3.0.0 and <7.0.0
+    compared to >=2.4.2 and <5.0.0 previously.

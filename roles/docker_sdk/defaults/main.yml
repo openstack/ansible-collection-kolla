@@ -7,8 +7,11 @@ docker_sdk_packages:
 # List of Python packages to install via Pip.
 # NOTE(hrw) docker 2.4.2 is in kolla-ansible requirements
 # NOTE(mnasiadka): docker 5.0.0 lacks six in deps but requires it
+# NOTE(mnasiadka): requests and urllib3 as a workaround for https://github.com/docker/docker-py/issues/3113
 docker_sdk_pip_packages:
   - "docker>=2.4.2,<5.0.0"
+  - "requests<2.29.0"
+  - "urllib3<2"
 
 # Version of python used to execute Ansible modules.
 host_python_version: "{{ ansible_facts.python.version.major }}.{{ ansible_facts.python.version.minor }}"

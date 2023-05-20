@@ -1,19 +1,17 @@
 ---
 use_default_rules: true
 skip_list:
-  # [E503] Tasks that run when changed should likely be handlers
-  # TODO(mnasiadka): Rework roles to do handlers instead of when: *.changed
-  - no-handler
-  # [E208] permissions not mentioned
-  # FIXME(mnasiadka): Rework file/template to include permissions
-  - risky-file-permissions
-  # [unnamed-task] All tasks should be named
-  # FIXME(mgoddard): Add names to all tasks
-  - unnamed-task
-  # [ignore-errors] Use failed_when and specify error conditions instead of using ignore_errors
-  # FIXME(mgoddard): Use failed_when instead of ignore_errors
-  - ignore-errors
-  # Package installs should not use latest
-  - package-latest
-  # Commands should not change things if nothing needs doing
-  - no-changed-when
+ # Experimental
+ - experimental
+ # Use FQCN
+ - fqcn[action]
+ - fqcn[action-core]
+ # Galaxy changelog and runtime defined
+ - galaxy[no-changelog]
+ - galaxy[no-runtime]
+ # don't fail on when at the end of block
+ - key-order[task]
+ # All tasks should be named
+ - name[missing]
+ # Variables names from within roles should use role_name_ as a prefix
+ - var-naming[no-role-prefix]

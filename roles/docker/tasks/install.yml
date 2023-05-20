@@ -62,8 +62,10 @@
       delay: 10
 
     - name: Ensure containers are running after Docker upgrade
+      # noqa no-changed-when
       command: "docker start {{ running_containers.stdout }}"
       become: true
+      changed_when: true
   when:
     - docker_install_result is changed
     - running_containers.rc == 0

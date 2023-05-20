@@ -38,6 +38,7 @@
         Package: {{ docker_apt_package }}
         Pin: version {{ docker_apt_package_pin }}
         Pin-Priority: 1000
+    mode: 0644
   become: True
   when: docker_apt_package_pin | length > 0
 

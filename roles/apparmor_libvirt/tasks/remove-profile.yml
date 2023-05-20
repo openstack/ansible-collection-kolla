@@ -16,6 +16,7 @@
   args:
     executable: /bin/bash
   become: True
+  changed_when: true
   when:
     - apparmor_libvirtd_profile.stat.exists
     - not apparmor_libvirtd_disable_profile.stat.exists

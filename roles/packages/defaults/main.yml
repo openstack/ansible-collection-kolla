@@ -10,7 +10,7 @@ enable_nova_libvirt_container: false
 ubuntu_pkg_install:
  - git
  - iputils-ping
- - "{% if enable_multipathd|bool %}sg3-utils-udev{% endif %}"
+ - "{% if enable_multipathd | bool %}sg3-utils-udev{% endif %}"
  - tzdata
 
 openeuler_pkg_install:

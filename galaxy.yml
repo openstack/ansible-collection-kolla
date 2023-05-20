@@ -3,7 +3,8 @@ namespace: openstack
 name: kolla
 version: 1.0.0
 readme: README.md
-authors: OpenStack
+authors:
+  - "OpenStack"
 description: Ansible collection for the OpenStack Kolla project
 license:
   - GPL-3.0-or-later

@@ -8,7 +8,7 @@
 
 - import_tasks: post-install.yml
 
-- name: configure ceph for zun
+- name: Configure ceph for zun
   include_tasks: configure-ceph-for-zun.yml
   when:
     - zun_configure_for_cinder_ceph | bool

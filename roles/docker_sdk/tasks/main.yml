@@ -28,3 +28,4 @@
     virtualenv_command: "{{ virtualenv is none | ternary(omit, 'python' ~ host_python_version ~ ' -m venv') }}"
   become: true
   become_user: "{{ virtualenv is none | ternary(omit, docker_sdk_virtualenv_owner) }}"
+  when: not (ansible_facts.distribution_release == "bookworm" and virtualenv is none)

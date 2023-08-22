@@ -6,7 +6,9 @@
       - publish-openstack-docs-pti
     check:
       jobs:
-        - kolla-ansible-debian
+        - kolla-ansible-debian:
+            vars:
+              kolla_python_version: "3.11"
         - kolla-ansible-rocky9
         - kolla-ansible-ubuntu
         - kayobe-overcloud-ubuntu-jammy
@@ -15,10 +17,14 @@
         - kayobe-overcloud-host-configure-rocky9
     check-arm64:
       jobs:
-        - kolla-ansible-debian-aarch64
+        - kolla-ansible-debian-aarch64:
+            vars:
+              kolla_python_version: "3.11"
     gate:
       jobs:
-        - kolla-ansible-debian
+        - kolla-ansible-debian:
+            vars:
+              kolla_python_version: "3.11"
         - kolla-ansible-rocky9
         - kolla-ansible-ubuntu
         - kayobe-overcloud-ubuntu-jammy

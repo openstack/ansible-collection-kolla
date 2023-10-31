@@ -12,8 +12,8 @@ podman_runtime_directory:
 
 # Podman can work with docker registries so it can stay this way
 # URL of private registry
-private_registry:
-private_registry_insecure: false
+podman_registry:
+podman_registry_insecure: false
 
 # Path to a CA file for Docker registry
-private_registry_ca:
+podman_registry_ca:

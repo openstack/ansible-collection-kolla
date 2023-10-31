@@ -15,13 +15,13 @@
   vars:
     registry: |
       [[registry]]
-      location = "{{ private_registry }}"
-      insecure = {{ private_registry_insecure | bool }}
+      location = "{{ podman_registry }}"
+      insecure = {{ podman_registry_insecure | bool }}
   copy:
     content: "{{ registry }}"
     dest: /etc/containers/registries.conf.d/registries.conf
     mode: 0644
-  when: private_registry is not none
+  when: podman_registry is not none
 
 - name: Write storage config
   become: True
@@ -39,17 +39,17 @@
     mode: 0644
   when: podman_storage_driver is not none or podman_runtime_directory is not none
 
-- name: Ensure the path for CA file for private registry exists
+- name: Ensure the path for CA file for podman registry exists
   file:
-    path: "/etc/containers/certs.d/{{ private_registry }}"
+    path: "/etc/containers/certs.d/{{ podman_registry }}"
     owner: root
     group: root
     mode: 0700
     state: directory
   become: True
   when:
-    - private_registry is not none
-    - private_registry_ca is not none
+    - podman_registry is not none
+    - podman_registry_ca is not none
 
 - name: Ensure the CA file for private registry exists
   copy:
@@ -60,5 +60,5 @@
     mode: 0600
   become: True
   when:
-    - private_registry is not none
-    - private_registry_ca is not none
+    - podman_registry is not none
+    - podman_registry_ca is not none

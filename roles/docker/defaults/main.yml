@@ -55,9 +55,15 @@ docker_registry_insecure: false
 # Path to a CA file for Docker registry
 docker_registry_ca:
 
+# URL of docker registry mirror
+docker_registry_mirrors: []
+
 # Whether to configure Docker and containerd for Zun.
 docker_configure_for_zun: false
 containerd_configure_for_zun: "{{ docker_configure_for_zun | bool }}"
 
 # Whether to restart docker systemd unit or reload
 docker_systemd_reload: false
+
+# Whether to enable debug logging
+docker_debug: false

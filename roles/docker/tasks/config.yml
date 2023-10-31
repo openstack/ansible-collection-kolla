@@ -12,6 +12,8 @@
     docker_config_insecure_registries:
       insecure-registries:
         - "{{ docker_registry }}"
+    docker_config_registry_mirror:
+      registry-mirrors: "{{ docker_registry_mirrors }}"
     docker_config_storage_driver:
       storage-driver: "{{ docker_storage_driver }}"
     docker_config_runtime_directory:
@@ -28,16 +30,20 @@
           name: nofile
           hard: "{{ docker_ulimit_nofile_hard }}"
           soft: "{{ docker_ulimit_nofile_soft }}"
+    docker_config_debug:
+      debug: "{{ docker_debug }}"
     docker_config: >-
       {{ {}
          | combine(docker_zun_config if docker_configure_for_zun | bool and 'zun-compute' in group_names else {})
          | combine(docker_config_insecure_registries if docker_registry_insecure | bool else {})
+         | combine(docker_config_registry_mirror if docker_registry_mirrors | length > 0 else {})
          | combine(docker_config_storage_driver if docker_storage_driver | length > 0 else {})
          | combine(docker_config_runtime_directory if docker_runtime_directory | length > 0 else {})
          | combine(docker_config_iptables if docker_disable_default_iptables_rules | bool else {})
          | combine(docker_config_bridge if docker_disable_default_network | bool else {})
          | combine(docker_config_ip_forward if docker_disable_ip_forward | bool else {})
          | combine(docker_config_ulimit_nofile if docker_ulimit_nofile | bool else {})
+         | combine(docker_config_debug if docker_debug | bool else {})
          | combine(docker_custom_config) }}
   copy:
     content: "{{ docker_config | to_nice_json }}"

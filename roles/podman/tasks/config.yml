@@ -16,7 +16,7 @@
     registry: |
       [[registry]]
       location = "{{ podman_registry }}"
-      insecure = {{ podman_registry_insecure | bool }}
+      insecure = {{ podman_registry_insecure | bool | lower }}
   copy:
     content: "{{ registry }}"
     dest: /etc/containers/registries.conf.d/registries.conf

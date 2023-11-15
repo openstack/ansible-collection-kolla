@@ -23,6 +23,19 @@
     mode: 0644
   when: podman_registry is not none
 
+- name: Write registry mirror config
+  become: True
+  vars:
+    registry_mirror: |
+      [[registry.mirror]]
+      prefix = docker.io
+      location = "{{ podman_registry_mirror }}"
+  copy:
+    content: "{{ registry_mirror }}"
+    dest: /etc/containers/registries.conf.d/registry-mirror.conf
+    mode: 0644
+  when: podman_registry_mirror is not none
+
 - name: Write storage config
   become: True
   vars:

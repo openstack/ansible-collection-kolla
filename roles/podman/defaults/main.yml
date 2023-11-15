@@ -15,5 +15,8 @@ podman_runtime_directory:
 podman_registry:
 podman_registry_insecure: false
 
-# Path to a CA file for Docker registry
+# Podman registry mirror
+podman_registry_mirror:
+
+# Path to a CA file for registry
 podman_registry_ca:

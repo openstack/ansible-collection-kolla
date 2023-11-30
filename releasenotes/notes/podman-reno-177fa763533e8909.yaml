@@ -1,0 +1,12 @@
+---
+prelude: >
+    New ``openstack.kolla.podman`` and ``openstack.kolla.podman_sdk``
+    roles were added. Using these Kolla now supports both docker and
+    podman container engines.
+features:
+  - |
+    With the ``docker_debug`` variable it is now possible to enable debug
+    logging for docker operations.
+  - |
+    With the ``docker_registry_mirrors`` variable it is now possible to
+    configure the list of registry mirrors that docker uses.

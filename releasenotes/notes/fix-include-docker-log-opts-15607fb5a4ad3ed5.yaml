@@ -1,0 +1,7 @@
+---
+fixes:
+  - |
+    Docker log-opts are now included in the docker daemon.json config again.
+    This allows for ``docker_log_max_file`` and ``docker_log_max_size`` to now
+    be set/overidden correctly.
+    `LP#2044537 <https://launchpad.net/bugs/2040105>`__

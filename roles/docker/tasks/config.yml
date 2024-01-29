@@ -33,7 +33,7 @@
     docker_config_debug:
       debug: "{{ docker_debug }}"
     docker_config: >-
-      {{ {}
+      {{ default_docker_config
          | combine(docker_zun_config if docker_configure_for_zun | bool and 'zun-compute' in group_names else {})
          | combine(docker_config_insecure_registries if docker_registry_insecure | bool else {})
          | combine(docker_config_registry_mirror if docker_registry_mirrors | length > 0 else {})

@@ -8,7 +8,7 @@ docker_sdk_packages:
 # List of Python packages to install via Pip.
 # NOTE(mnasiadka) docker 3.0.0 is in kolla-ansible requirements
 docker_sdk_pip_packages:
-  - "docker>=3.0.0,<7.0.0"
+  - "docker>=6.0.0,<7.0.0"
 
 # APT cache TTL in seconds.
 apt_cache_valid_time: 3600

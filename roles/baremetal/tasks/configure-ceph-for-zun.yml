@@ -2,25 +2,53 @@
 - name: Install ceph-common
   block:
     - block:
-        - name: Install ceph apt gpg key
-          apt_key:
-            url: "{{ ceph_apt_key_file }}"
-            id: "{{ ceph_apt_key_id }}"
-            state: present
-          become: True
+        - name: Ensure apt sources list directory exists
+          file:
+            path: /etc/apt/sources.list.d
+            state: directory
+            recurse: yes
 
+        - name: Ensure apt keyrings directory exists
+          file:
+            path: /etc/apt/keyrings
+            state: directory
+            recurse: yes
+
+        - name: Install ceph apt gpg key
+          get_url:
+            url: "{{ ceph_apt_key_file }}"
+            dest: "/etc/apt/keyrings/ceph.gpg"
+            mode: "0644"
+            force: true
+
+        - name: Ensure old ceph repository absent
+          file:
+            path: /etc/apt/sources.list.d/ceph.list
+            state: absent
+
+        # TODO(mmalchuk): replace with ansible.builtin.deb822_repository module
+        # when all stable releases moves to the ansible-core >= 2.15
         - name: Enable ceph apt repository
-          apt_repository:
-            repo: "{{ ceph_apt_repo }}"
-            filename: ceph
-          become: True
+          copy:
+            dest: /etc/apt/sources.list.d/ceph.sources
+            content: |
+                # Ansible managed
+
+                Types: deb
+                URIs: {{ ceph_apt_url }}
+                Suites: {{ ansible_facts.distribution_release }}
+                Components: main
+                Signed-by: /etc/apt/keyrings/ceph.gpg
+            mode: "0644"
 
         - name: Install apt packages
-          package:
+          apt:
             name: "{{ ceph_apt_package }}"
             state: present
-          become: True
+            update_cache: true
+
       when: ansible_facts.os_family == 'Debian'
+      become: True
 
     - block:
         - name: Enable ceph yum repository
@@ -30,19 +58,16 @@
             baseurl: "{{ ceph_yum_baseurl }}"
             gpgcheck: "{{ ceph_yum_gpgcheck | bool }}"
             gpgkey: "{{ ceph_yum_gpgkey }}"
-          become: True
 
         - name: Enable epel yum repository
           package:
             name: "{{ epel_yum_package }}"
             state: present
-          become: True
 
         - name: Install ceph rpm gpg key
           rpm_key:
             state: present
             key: "{{ ceph_yum_gpgkey }}"
-          become: True
           when:
             - ceph_yum_gpgcheck | bool
 
@@ -51,5 +76,6 @@
             name: "{{ ceph_yum_package }}"
             state: present
             enablerepo: epel
-          become: True
+
       when: ansible_facts.os_family == 'RedHat'
+      become: True

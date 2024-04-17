@@ -7,7 +7,6 @@ ceph_url: "https://download.ceph.com"
 ceph_apt_url: "{{ ceph_url }}/debian-{{ ceph_version }}/"
 ceph_apt_repo: "deb {{ ceph_apt_url }} {{ ansible_facts.distribution_release }} main"
 ceph_apt_key_file: "{{ ceph_url }}/keys/release.gpg"
-ceph_apt_key_id: "460F3994"
 ceph_apt_package: "ceph-common"
 
 # Ceph Yum repository configuration.

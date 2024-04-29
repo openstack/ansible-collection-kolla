@@ -1,0 +1,11 @@
+---
+upgrade:
+  - |
+    Socket activation of podman is now enabled by the ``podman`` role and
+    not the ``podman_sdk`` role.
+fixes:
+  - |
+    Fixes an issue where the ``podman`` role did not enable socket activation
+    for the podman service.
+    See `LP#2054568 <https://bugs.launchpad.net/ansible-collection-kolla/+bug/2054568>`__
+    for further details.

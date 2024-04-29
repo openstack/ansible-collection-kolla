@@ -21,6 +21,13 @@
 # If any packages were updated, and any containers were running, wait for the
 # daemon to come up and start all previously running containers.
 
+- name: Start podman.socket
+  become: true
+  service:
+    name: podman.socket
+    state: started
+    enabled: yes
+
 - block:
     - name: Wait for Podman to start
       command: podman info

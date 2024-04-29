@@ -61,10 +61,3 @@
   become: true
   become_user: "{{ virtualenv is none | ternary(omit, podman_sdk_virtualenv_owner) }}"
   when: not (ansible_facts.distribution_release == "bookworm" and virtualenv is none)
-
-- name: Start podman.socket
-  become: true
-  service:
-    name: podman.socket
-    state: started
-    enabled: yes

@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    Fixes usage of the deprecated apt-key tool and switch to deb822 format for
+    Apt repositories on Ubuntu.

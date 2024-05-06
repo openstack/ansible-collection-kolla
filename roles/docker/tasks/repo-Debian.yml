@@ -1,11 +1,11 @@
 ---
 - name: Install CA certificates and gnupg packages
-  package:
+  apt:
     name:
       - ca-certificates
       - gnupg
-    cache_valid_time: "{{ apt_cache_valid_time if ansible_facts.os_family == 'Debian' else omit }}"
-    update_cache: "{{ True if ansible_facts.os_family == 'Debian' else omit }}"
+    cache_valid_time: "{{ apt_cache_valid_time }}"
+    update_cache: true
     state: present
   become: True
 
@@ -38,12 +38,33 @@
         Package: {{ docker_apt_package }}
         Pin: version {{ docker_apt_package_pin }}
         Pin-Priority: 1000
-    mode: 0644
+    mode: "0644"
   become: True
   when: docker_apt_package_pin | length > 0
 
+- name: Ensure old docker repository absent
+  file:
+    path: /etc/apt/sources.list.d/docker.list
+    state: absent
+  become: True
+
+# TODO(mmalchuk): replace with ansible.builtin.deb822_repository module
+# when all stable releases moves to the ansible-core >= 2.15
 - name: Enable docker apt repository
-  apt_repository:
-    repo: "{{ docker_apt_repo }}"
-    filename: docker
+  copy:
+    dest: /etc/apt/sources.list.d/docker.sources
+    content: |
+        # Ansible managed
+
+        Types: deb
+        URIs: {{ docker_apt_url }}
+        Suites: {{ ansible_facts.distribution_release }}
+        Components: stable
+        Signed-by: /etc/apt/keyrings/docker.asc
+    mode: "0644"
+  become: True
+
+- name: Update the apt cache
+  apt:
+    update_cache: true
   become: True

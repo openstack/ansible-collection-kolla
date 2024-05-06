@@ -6,30 +6,46 @@
         path: /etc/apt/sources.list.d
         state: directory
         recurse: yes
-      become: True
 
     - name: Ensure apt keyrings directory exists
       file:
         path: /etc/apt/keyrings
         state: directory
         recurse: yes
-      become: True
 
     - name: Install osbpo apt gpg key
       template:
         src: osbpo_pubkey.gpg.j2
         dest: /etc/apt/keyrings/osbpo.asc
         mode: "0644"
-      become: True
 
+    - name: Ensure old osbpo apt repository absent
+      file:
+        path: /etc/apt/sources.list.d/osbpo.list
+        state: absent
+
+    # TODO(mmalchuk): replace with ansible.builtin.deb822_repository module
+    # when all stable releases moves to the ansible-core >= 2.15
     - name: Enable osbpo apt repository
-      apt_repository:
-        repo: "{{ podman_sdk_osbpo_apt_repo }}"
-        filename: osbpo
-      become: True
+      copy:
+        dest: /etc/apt/sources.list.d/docker.sources
+        content: |
+            # Ansible managed
+
+            Types: deb
+            URIs: {{ podman_sdk_osbpo_apt_url }}
+            Suites: bookworm-bobcat-backports-nochange
+            Components: main
+            Signed-by: /etc/apt/keyrings/osbpo.asc
+        mode: "0644"
+
+    - name: Update the apt cache
+      apt:
+        update_cache: true
   when:
     - ansible_facts.os_family == 'Debian'
     - virtualenv is none
+  become: True
 
 - name: Install packages
   package:

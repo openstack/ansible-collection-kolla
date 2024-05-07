@@ -1,8 +1,7 @@
 ---
 issues:
   - |
-    On Ubuntu 22.04, when using podman, containers may get stuck in the
-    ``creating`` state when using a ``6.5.x`` series (or newer) kernel. See
-    `LP#2056210
-    <https://bugs.launchpad.net/ansible-collection-kolla/+bug/2056210>`__ for
-    more details.
+    On Ubuntu 22.04, when using Podman, containers may get stuck in the
+    ``creating`` state when using a ``6.5.x`` series (or newer) kernel. For
+    more details, see `LP#2056210
+    <https://bugs.launchpad.net/ansible-collection-kolla/+bug/2056210>`__.

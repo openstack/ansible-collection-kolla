@@ -1,5 +1,5 @@
 ---
 upgrade:
   - |
-    Bumping minimal version of docker python library to 6.0.0
-    so it supports cgroupns parameter.
+    Bumped the minimal version of the Docker Python library to ``6.0.0``
+    to support the cgroupns parameter.

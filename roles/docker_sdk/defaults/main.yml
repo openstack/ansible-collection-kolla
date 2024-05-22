@@ -9,6 +9,7 @@ docker_sdk_packages:
 # NOTE(mnasiadka) docker 3.0.0 is in kolla-ansible requirements
 docker_sdk_pip_packages:
   - "docker>=6.0.0,<7.0.0"
+  - "requests<2.32"
 
 # APT cache TTL in seconds.
 apt_cache_valid_time: 3600

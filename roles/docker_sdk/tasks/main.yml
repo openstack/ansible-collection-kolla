@@ -1,4 +1,36 @@
 ---
+- name: Configure osbpo apt repository
+  block:
+    - name: Ensure apt sources list directory exists
+      file:
+        path: /etc/apt/sources.list.d
+        state: directory
+        recurse: yes
+      become: True
+
+    - name: Ensure apt keyrings directory exists
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        recurse: yes
+      become: True
+
+    - name: Install osbpo apt gpg key
+      template:
+        src: osbpo_pubkey.gpg.j2
+        dest: /etc/apt/keyrings/osbpo.asc
+        mode: "0644"
+      become: True
+
+    - name: Enable osbpo apt repository
+      apt_repository:
+        repo: "{{ docker_sdk_osbpo_apt_repo }}"
+        filename: osbpo
+      become: True
+  when:
+    - ansible_facts.os_family == 'Debian'
+    - virtualenv is none
+
 - name: Install packages
   package:
     name: "{{ docker_sdk_packages | select | list }}"

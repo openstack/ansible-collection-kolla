@@ -34,3 +34,6 @@ docker_sdk_virtualenv_owner: "{{ kolla_user if create_kolla_user | bool else omi
 
 # A pip constraints file to use when installing the Docker SDK.
 docker_sdk_upper_constraints_file:
+
+docker_sdk_osbpo_apt_url: "http://osbpo.debian.net/debian"
+docker_sdk_osbpo_apt_repo: "deb [signed-by=/etc/apt/keyrings/osbpo.asc] {{ docker_sdk_osbpo_apt_url }} bookworm-bobcat-backports-nochange main"

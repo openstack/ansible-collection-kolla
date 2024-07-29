@@ -1,12 +1,2 @@
 ---
-- include_tasks: "repo-{{ ansible_facts.os_family }}.yml"
-  when: enable_docker_repo | bool
-
-- import_tasks: install.yml
-
-- import_tasks: config.yml
-
-- include_tasks: configure-containerd-for-zun.yml
-  when:
-    - containerd_configure_for_zun|bool
-    - "'zun-cni-daemon' in group_names"
+- include_tasks: "{{ package_action }}.yml"

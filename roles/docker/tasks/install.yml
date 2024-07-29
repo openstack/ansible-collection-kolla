@@ -1,4 +1,7 @@
 ---
+- include_tasks: "repo-{{ ansible_facts.os_family }}.yml"
+  when: enable_docker_repo | bool
+
 # Upgrading docker engine may cause containers to stop. Take a snapshot of the
 # running containers prior to a potential upgrade of Docker.
 
@@ -70,3 +73,10 @@
     - docker_install_result is changed
     - running_containers.rc == 0
     - running_containers.stdout != ''
+
+- import_tasks: config.yml
+
+- include_tasks: configure-containerd-for-zun.yml
+  when:
+    - containerd_configure_for_zun|bool
+    - "'zun-cni-daemon' in group_names"

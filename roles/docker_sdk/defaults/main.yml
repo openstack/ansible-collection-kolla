@@ -24,8 +24,10 @@ docker_sdk_packages: >-
 
 # List of Python packages to install via Pip.
 # NOTE(mnasiadka) docker 3.0.0 is in kolla-ansible requirements
-docker_sdk_pip_packages:
+docker_sdk_core_pip_packages:
   - "docker>=7.0.0"
+
+docker_sdk_additional_pip_packages:
   - "requests"
   - "dbus-python"
 
@@ -55,3 +57,6 @@ docker_sdk_upper_constraints_file:
 
 docker_sdk_osbpo_apt_url: "http://osbpo.debian.net/debian"
 docker_sdk_osbpo_apt_repo: "deb [signed-by=/etc/apt/keyrings/osbpo.asc] {{ docker_sdk_osbpo_apt_url }} bookworm-bobcat-backports-nochange main"
+
+# Action taken on the packages
+package_action: "install"

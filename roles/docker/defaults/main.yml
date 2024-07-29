@@ -69,3 +69,13 @@ docker_systemd_reload: false
 
 # Whether to enable debug logging
 docker_debug: false
+
+# Folders in which docker stores any kind of data
+docker_paths:
+  - /var/lib/docker
+  - /var/lib/containerd
+  - /usr/libexec/docker
+  - /etc/docker
+
+# Action taken on the packages
+package_action: "install"

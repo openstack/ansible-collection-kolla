@@ -8,8 +8,10 @@ podman_sdk_packages_default:
 
 # List of Python packages to install via Pip.
 # NOTE(kevko) podman 4.7.0 is built in debian as apt package, so..
-podman_sdk_pip_packages:
+podman_sdk_core_pip_packages:
   - "podman>=4.7.0"
+
+podman_sdk_additional_pip_packages:
   - "dbus-python"
 
 podman_sdk_packages_dbus_deps_redhat:
@@ -53,3 +55,6 @@ podman_sdk_virtualenv_owner: "{{ kolla_user if create_kolla_user | bool else omi
 podman_sdk_upper_constraints_file:
 
 podman_sdk_osbpo_apt_url: "http://osbpo.debian.net/debian"
+
+# Default action when handling packages will be install
+package_action: "install"

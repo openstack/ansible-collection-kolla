@@ -1,0 +1,68 @@
+---
+- name: Check for leftover containers
+  command: docker ps -q
+  become: true
+  changed_when: false
+  failed_when: false
+  register: containers
+
+- name: Check for leftover volumes
+  command: docker volume ls -q
+  become: true
+  changed_when: false
+  failed_when: false
+  register: volumes
+
+- name: Fail if there are any containers
+  assert:
+    that: (containers.stdout_lines | length) == 0
+    fail_msg: |-
+      There are still some containers left over!
+      Remove them before uninstalling container engine!
+
+- name: Fail if there are any volumes
+  assert:
+    that: (volumes.stdout_lines | length) == 0
+    fail_msg: |-
+      There are still some volumes left over!
+      Remove them before uninstalling container engine!
+
+- name: Stop docker service
+  become: true
+  systemd:
+    name: docker
+    state: stopped
+    enabled: false
+
+- name: Uninstall docker packages
+  package:
+    name: "{{ docker_packages | select | list }}"
+    autoremove: true
+    state: absent
+  become: true
+
+- name: Remove docker group
+  become: true
+  group:
+    name: docker
+    state: absent
+
+- name: Cleanup CNI config directory
+  become: true
+  file:
+    path: "{{ cni_config_dir }}"
+    state: absent
+
+- block:
+    # NOTE(mhiner): cleanup is best effort because sometimes there are still
+    # qemu-kvm processes running that prevent the removal
+    - name: Cleanup docker files
+      become: true
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop: "{{ docker_paths }}"
+  rescue:
+    - name: Unable to remove all files
+      debug:
+        var: ansible_failed_result

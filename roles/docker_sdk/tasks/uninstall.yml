@@ -1,0 +1,15 @@
+---
+- name: Uninstall docker SDK for python using pip
+  pip:
+    name: "{{ docker_sdk_core_pip_packages }}"
+    executable: "{{ virtualenv is none | ternary('pip3', omit) }}"
+    virtualenv: "{{ virtualenv is none | ternary(omit, virtualenv) }}"
+    virtualenv_site_packages: "{{ virtualenv is none | ternary(omit, virtualenv_site_packages) }}"
+    virtualenv_command: "{{ virtualenv is none | ternary(omit, 'python' ~ host_python_version ~ ' -m venv') }}"
+    state: absent
+  become: true
+  become_user: "{{ virtualenv is none | ternary(omit, docker_sdk_virtualenv_owner) }}"
+  when: not (docker_sdk_python_externally_managed | default(false) and virtualenv is none)
+
+# NOTE(r-krcek): Don't uninstall docker_sdk_packages because that includes
+# important packages like pip or setuptools that are still needed on systems!

@@ -20,3 +20,12 @@ podman_registry_mirror:
 
 # Path to a CA file for registry
 podman_registry_ca:
+
+# Folders in which podman stores any kind of data
+podman_paths:
+  - /var/run/podman/podman.sock
+  - /etc/containers
+  - /var/lib/containers
+
+# Action taken on the packages
+package_action: "install"

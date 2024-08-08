@@ -3,7 +3,7 @@
 podman_sdk_packages:
   - "python3-setuptools"
   - "python3-pip"
-  - "{% if ansible_facts.distribution_release == 'bookworm' and virtualenv is none %}python3-podman{% endif %}"
+  - "{% if podman_sdk_python_externally_managed | default(false) and virtualenv is none %}python3-podman{% endif %}"
 
 # List of Python packages to install via Pip.
 # NOTE(kevko) podman 4.7.0 is built in debian as apt package, so..

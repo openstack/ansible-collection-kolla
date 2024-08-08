@@ -1,4 +1,23 @@
 ---
+- name: Handling for Python3.10+ externally managed environments
+  block:
+    - name: Get Python
+      ansible.builtin.command: "{{ ansible_facts.python.executable }} -c 'import sysconfig; print(sysconfig.get_path(\"stdlib\", sysconfig.get_default_scheme()))'"
+      changed_when: false
+      register: python_default_scheme_path
+
+    - name: Check if Python environment is externally managed
+      ansible.builtin.stat:
+        path: "{{ python_default_scheme_path.stdout }}/EXTERNALLY-MANAGED"
+      register: python_externally_managed
+
+    - name: Set docker_sdk_python_externally_managed fact
+      set_fact:
+        docker_sdk_python_externally_managed: true
+      when: python_externally_managed.stat.exists
+
+  when: ansible_facts.python.version.major == 3 and ansible_facts.python.version.minor >= 10
+
 - name: Configure osbpo apt repository
   block:
     - name: Ensure apt sources list directory exists
@@ -29,6 +48,7 @@
       become: True
   when:
     - ansible_facts.distribution == 'Debian'
+    - docker_sdk_python_externally_managed | default(false)
     - virtualenv is none
 
 - name: Install packages
@@ -50,7 +70,7 @@
   become_user: "{{ docker_sdk_virtualenv_owner }}"
   when: virtualenv is not none
 
-- name: Install docker SDK for python
+- name: Install docker SDK for python using pip
   pip:
     name: "{{ docker_sdk_pip_packages }}"
     executable: "{{ virtualenv is none | ternary('pip3', omit) }}"
@@ -60,4 +80,4 @@
     virtualenv_command: "{{ virtualenv is none | ternary(omit, 'python' ~ host_python_version ~ ' -m venv') }}"
   become: true
   become_user: "{{ virtualenv is none | ternary(omit, docker_sdk_virtualenv_owner) }}"
-  when: not (ansible_facts.distribution_release == "bookworm" and virtualenv is none)
+  when: not (docker_sdk_python_externally_managed | default(false) and virtualenv is none)

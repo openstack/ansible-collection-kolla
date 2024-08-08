@@ -3,7 +3,7 @@
 docker_sdk_packages:
   - "python3-setuptools"
   - "python3-pip"
-  - "{% if ansible_facts.distribution_release == 'bookworm' and virtualenv is none %}python3-docker{% endif %}"
+  - "{% if docker_sdk_python_externally_managed | default(false) and virtualenv is none %}python3-docker{% endif %}"
 
 # List of Python packages to install via Pip.
 # NOTE(mnasiadka) docker 3.0.0 is in kolla-ansible requirements

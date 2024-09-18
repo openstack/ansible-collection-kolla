@@ -2,7 +2,8 @@
 - name: Handling for Python3.10+ externally managed environments
   block:
     - name: Get Python
-      ansible.builtin.command: "{{ ansible_facts.python.executable }} -c 'import sysconfig; print(sysconfig.get_path(\"stdlib\", sysconfig.get_default_scheme()))'"
+      ansible.builtin.command:
+        cmd: "{{ ansible_facts.python.executable }} -c 'import sysconfig; print(sysconfig.get_path(\"stdlib\", sysconfig.get_default_scheme()))'"
       changed_when: false
       register: python_default_scheme_path
 
@@ -24,13 +25,13 @@
       file:
         path: /etc/apt/sources.list.d
         state: directory
-        recurse: yes
+        recurse: true
 
     - name: Ensure apt keyrings directory exists
       file:
         path: /etc/apt/keyrings
         state: directory
-        recurse: yes
+        recurse: true
 
     - name: Install osbpo apt gpg key
       template:
@@ -65,13 +66,13 @@
     - ansible_facts.distribution == 'Debian'
     - podman_sdk_python_externally_managed | default(false)
     - virtualenv is none
-  become: True
+  become: true
 
 - name: Install packages
   package:
     name: "{{ podman_sdk_packages | select | list }}"
     cache_valid_time: "{{ apt_cache_valid_time if ansible_facts.os_family == 'Debian' else omit }}"
-    update_cache: "{{ True if ansible_facts.os_family == 'Debian' else omit }}"
+    update_cache: "{{ true if ansible_facts.os_family == 'Debian' else omit }}"
     state: present
   become: true
 

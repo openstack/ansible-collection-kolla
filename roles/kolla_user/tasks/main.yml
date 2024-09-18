@@ -3,7 +3,7 @@
   group:
     name: "{{ item }}"
     state: present
-  become: True
+  become: true
   loop:
     - docker
     - sudo
@@ -18,21 +18,21 @@
       - docker
       - sudo
     append: true
-  become: True
+  become: true
 
 - name: Add public key to kolla user authorized keys
   authorized_key:
     user: "{{ kolla_user }}"
     key: "{{ kolla_ssh_key.public_key }}"
-  become: True
+  become: true
 
 - name: Grant kolla user passwordless sudo
   lineinfile:
     dest: /etc/sudoers.d/kolla-ansible-users
     state: present
-    create: yes
+    create: true
     mode: '0640'
     regexp: '^{{ kolla_user }}'
     line: '{{ kolla_user }} ALL=(ALL) NOPASSWD: ALL'
-  become: True
+  become: true
   when: create_kolla_user_sudoers | bool

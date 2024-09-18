@@ -3,12 +3,12 @@
 - block:
     - name: Set firewall default policy
       # noqa ignore-errors
-      become: True
+      become: true
       ufw:
         state: disabled
         policy: allow
       when: ansible_facts.os_family == 'Debian'
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: Check if firewalld is installed
       # noqa command-instead-of-module
@@ -19,7 +19,7 @@
       when: ansible_facts.os_family == 'RedHat'
 
     - name: Disable firewalld
-      become: True
+      become: true
       service:
         name: "{{ item }}"
         enabled: false

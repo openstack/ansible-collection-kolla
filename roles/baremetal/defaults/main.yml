@@ -17,17 +17,17 @@ ceph_yum_gpgcheck: true
 ceph_yum_package: "ceph-common"
 epel_yum_package: "epel-release"
 
-create_kolla_user: False
+create_kolla_user: false
 
 kolla_user: "kolla"
 kolla_group: "kolla"
 
-change_selinux: True
+change_selinux: true
 
 selinux_state: "permissive"
 
 # If true, the host firewall service (firewalld or ufw) will be disabled.
-disable_firewall: True
+disable_firewall: true
 
 git_http_proxy: ""
 git_https_proxy: ""

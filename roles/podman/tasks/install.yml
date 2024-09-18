@@ -15,7 +15,7 @@
     cache_valid_time: "{{ apt_cache_valid_time if ansible_facts.os_family == 'Debian' else omit }}"
     update_cache: true
     state: present
-  become: True
+  become: true
   register: podman_install_result
 
 # If any packages were updated, and any containers were running, wait for the
@@ -26,7 +26,7 @@
   service:
     name: podman.socket
     state: started
-    enabled: yes
+    enabled: true
 
 - block:
     - name: Wait for Podman to start

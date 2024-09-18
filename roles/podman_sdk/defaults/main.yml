@@ -23,9 +23,9 @@ virtualenv:
 # Whether the virtualenv will inherit packages from the global site-packages
 # directory. This is typically required for modules such as yum and apt which
 # are not available on PyPI.
-virtualenv_site_packages: True
+virtualenv_site_packages: true
 
-create_kolla_user: False
+create_kolla_user: false
 kolla_user: "kolla"
 
 # Owner of the virtualenv.

@@ -3,11 +3,11 @@
   file:
     path: /etc/docker
     state: directory
-    mode: 0755
-  become: True
+    mode: "0755"
+  become: true
 
 - name: Write docker config
-  become: True
+  become: true
   vars:
     docker_config_insecure_registries:
       insecure-registries:
@@ -48,12 +48,12 @@
   copy:
     content: "{{ docker_config | to_nice_json }}"
     dest: /etc/docker/daemon.json
-    mode: 0644
+    mode: "0644"
   notify:
     - Restart docker
 
 - name: Remove old docker options file
-  become: True
+  become: true
   file:
     path: /etc/systemd/system/docker.service.d/kolla.conf
     state: absent
@@ -66,11 +66,11 @@
     - Reload docker service file
 
 - name: Ensure docker service directory exists
-  become: True
+  become: true
   file:
     path: /etc/systemd/system/docker.service.d
     state: directory
-    recurse: yes
+    recurse: true
   when: >
     (docker_configure_for_zun | bool and 'zun-compute' in group_names) or
     docker_http_proxy | length > 0 or
@@ -78,11 +78,11 @@
     docker_no_proxy | length > 0
 
 - name: Configure docker service
-  become: True
+  become: true
   template:
     src: docker_systemd_service.j2
     dest: /etc/systemd/system/docker.service.d/kolla.conf
-    mode: 0644
+    mode: "0644"
   when: >
     (docker_configure_for_zun | bool and 'zun-compute' in group_names) or
     docker_http_proxy | length > 0 or
@@ -96,9 +96,9 @@
     path: "/etc/docker/certs.d/{{ docker_registry }}"
     owner: root
     group: root
-    mode: 0700
+    mode: "0700"
     state: directory
-  become: True
+  become: true
   when: docker_registry is not none and docker_registry_ca is not none
 
 - name: Ensure the CA file for private registry exists
@@ -107,8 +107,8 @@
     dest: "/etc/docker/certs.d/{{ docker_registry }}/ca.crt"
     owner: root
     group: root
-    mode: 0600
-  become: True
+    mode: "0600"
+  become: true
   when: docker_registry is not none and docker_registry_ca is not none
   notify:
     - Restart docker
@@ -120,6 +120,6 @@
   systemd:
     name: docker
     state: started
-    enabled: yes
-    masked: no
-  become: True
+    enabled: true
+    masked: false
+  become: true

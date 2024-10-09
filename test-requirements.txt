@@ -1,5 +1,5 @@
 # linting
-ansible-lint>=6.0.0,<7.0.0 # MIT
+ansible-lint>=24.0.0,<25.0.0 # MIT
 bandit>=1.1.0 # Apache-2.0
 bashate>=0.5.1 # Apache-2.0
 doc8>=0.6.0 # Apache-2.0
@@ -16,4 +16,4 @@ stestr>=1.0.0 # Apache-2.0
 testtools>=1.4.0 # MIT
 
 # sanity testing
-ansible-core>=2.15.0,<2.16.0 # GPL3
+ansible-core>=2.16.0,<2.17.0 # GPL3

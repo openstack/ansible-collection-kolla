@@ -3,15 +3,15 @@
   file:
     path: /etc/containers/{{ item }}
     state: directory
-    mode: 0755
-  become: True
+    mode: "0755"
+  become: true
   with_items:
     - "containers.conf.d"
     - "registries.conf.d"
     - "storage.conf.d"
 
 - name: Write registries config
-  become: True
+  become: true
   vars:
     registry: |
       [[registry]]
@@ -20,11 +20,11 @@
   copy:
     content: "{{ registry }}"
     dest: /etc/containers/registries.conf.d/registries.conf
-    mode: 0644
+    mode: "0644"
   when: podman_registry is not none
 
 - name: Write registry mirror config
-  become: True
+  become: true
   vars:
     registry_mirror: |
       [[registry.mirror]]
@@ -33,11 +33,11 @@
   copy:
     content: "{{ registry_mirror }}"
     dest: /etc/containers/registries.conf.d/registry-mirror.conf
-    mode: 0644
+    mode: "0644"
   when: podman_registry_mirror is not none
 
 - name: Write storage config
-  become: True
+  become: true
   vars:
     config: |
       {% if podman_storage_driver is not none %}
@@ -49,7 +49,7 @@
   copy:
     content: "{{ config }}"
     dest: /etc/containers/storage.conf.d/storage.conf
-    mode: 0644
+    mode: "0644"
   when: podman_storage_driver is not none or podman_runtime_directory is not none
 
 - name: Ensure the path for CA file for podman registry exists
@@ -57,9 +57,9 @@
     path: "/etc/containers/certs.d/{{ podman_registry }}"
     owner: root
     group: root
-    mode: 0700
+    mode: "0700"
     state: directory
-  become: True
+  become: true
   when:
     - podman_registry is not none
     - podman_registry_ca is not none
@@ -70,8 +70,8 @@
     dest: "/etc/containers/certs.d/{{ private_registry }}/ca.crt"
     owner: root
     group: root
-    mode: 0600
-  become: True
+    mode: "0600"
+  become: true
   when:
     - podman_registry is not none
     - podman_registry_ca is not none

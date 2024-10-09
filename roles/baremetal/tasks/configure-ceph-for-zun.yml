@@ -6,13 +6,13 @@
           file:
             path: /etc/apt/sources.list.d
             state: directory
-            recurse: yes
+            recurse: true
 
         - name: Ensure apt keyrings directory exists
           file:
             path: /etc/apt/keyrings
             state: directory
-            recurse: yes
+            recurse: true
 
         - name: Install ceph apt gpg key
           get_url:
@@ -48,7 +48,7 @@
             update_cache: true
 
       when: ansible_facts.os_family == 'Debian'
-      become: True
+      become: true
 
     - block:
         - name: Enable ceph yum repository
@@ -78,4 +78,4 @@
             enablerepo: epel
 
       when: ansible_facts.os_family == 'RedHat'
-      become: True
+      become: true

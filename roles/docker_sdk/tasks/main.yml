@@ -2,7 +2,8 @@
 - name: Handling for Python3.10+ externally managed environments
   block:
     - name: Get Python
-      ansible.builtin.command: "{{ ansible_facts.python.executable }} -c 'import sysconfig; print(sysconfig.get_path(\"stdlib\", sysconfig.get_default_scheme()))'"
+      ansible.builtin.command:
+        cmd: "{{ ansible_facts.python.executable }} -c 'import sysconfig; print(sysconfig.get_path(\"stdlib\", sysconfig.get_default_scheme()))'"
       changed_when: false
       register: python_default_scheme_path
 
@@ -24,28 +25,28 @@
       file:
         path: /etc/apt/sources.list.d
         state: directory
-        recurse: yes
-      become: True
+        recurse: true
+      become: true
 
     - name: Ensure apt keyrings directory exists
       file:
         path: /etc/apt/keyrings
         state: directory
-        recurse: yes
-      become: True
+        recurse: true
+      become: true
 
     - name: Install osbpo apt gpg key
       template:
         src: osbpo_pubkey.gpg.j2
         dest: /etc/apt/keyrings/osbpo.asc
         mode: "0644"
-      become: True
+      become: true
 
     - name: Enable osbpo apt repository
       apt_repository:
         repo: "{{ docker_sdk_osbpo_apt_repo }}"
         filename: osbpo
-      become: True
+      become: true
   when:
     - ansible_facts.distribution == 'Debian'
     - docker_sdk_python_externally_managed | default(false)

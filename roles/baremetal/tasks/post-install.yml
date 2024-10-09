@@ -12,8 +12,8 @@
     state: directory
     owner: "{{ kolla_user if create_kolla_user | bool else omit }}"
     group: "{{ kolla_group if create_kolla_user | bool else omit }}"
-    mode: 0755
-  become: True
+    mode: "0755"
+  become: true
 
 - import_role:
     name: openstack.kolla.apparmor_libvirt

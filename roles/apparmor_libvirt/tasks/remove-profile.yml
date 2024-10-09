@@ -15,7 +15,7 @@
     ln -vsf /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable
   args:
     executable: /bin/bash
-  become: True
+  become: true
   changed_when: true
   when:
     - apparmor_libvirtd_profile.stat.exists

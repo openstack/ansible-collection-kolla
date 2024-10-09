@@ -3,8 +3,8 @@
   file:
     path: /etc/yum.repos.d/
     state: directory
-    recurse: yes
-  become: True
+    recurse: true
+  become: true
 
 - name: Enable docker yum repository
   yum_repository:
@@ -17,11 +17,11 @@
     # modular package in CentOS 8 see:
     # https://bugzilla.redhat.com/show_bug.cgi?id=1734081
     module_hotfixes: true
-  become: True
+  become: true
 
 - name: Install docker rpm gpg key
   rpm_key:
     state: present
     key: "{{ docker_yum_gpgkey }}"
-  become: True
+  become: true
   when: docker_yum_gpgcheck | bool

@@ -1,9 +1,9 @@
 ---
 - name: Reload docker service file
-  become: True
+  become: true
   systemd:
     name: docker
-    daemon_reload: yes
+    daemon_reload: true
   notify:
     - Restart docker
 
@@ -11,11 +11,11 @@
   systemd:
     name: docker
     state: "{{ 'reloaded' if docker_systemd_reload | bool else 'restarted' }}"
-    masked: no
-  become: True
+    masked: false
+  become: true
 
 - name: Restart containerd
   service:
     name: containerd
     state: restarted
-  become: True
+  become: true

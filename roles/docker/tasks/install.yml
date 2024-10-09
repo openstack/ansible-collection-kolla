@@ -35,7 +35,7 @@
     cache_valid_time: "{{ apt_cache_valid_time if ansible_facts.os_family == 'Debian' else omit }}"
     update_cache: true
     state: present
-  become: True
+  become: true
   register: docker_install_result
 
 # If any packages were updated, and any containers were running, wait for the
@@ -48,9 +48,9 @@
       systemd:
         name: docker
         state: started
-        enabled: yes
-        masked: no
-      become: True
+        enabled: true
+        masked: false
+      become: true
 
     - name: Wait for Docker to start
       command: docker info

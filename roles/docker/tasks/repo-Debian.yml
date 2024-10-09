@@ -7,21 +7,21 @@
     cache_valid_time: "{{ apt_cache_valid_time }}"
     update_cache: true
     state: present
-  become: True
+  become: true
 
 - name: Ensure apt sources list directory exists
   file:
     path: /etc/apt/sources.list.d
     state: directory
-    recurse: yes
-  become: True
+    recurse: true
+  become: true
 
 - name: Ensure apt keyrings directory exists
   file:
     path: /etc/apt/keyrings
     state: directory
-    recurse: yes
-  become: True
+    recurse: true
+  become: true
 
 - name: Install docker apt gpg key
   get_url:
@@ -29,7 +29,7 @@
     dest: "/etc/apt/keyrings/docker.asc"
     mode: "0644"
     force: true
-  become: True
+  become: true
 
 - name: Install docker apt pin
   copy:
@@ -39,14 +39,14 @@
         Pin: version {{ docker_apt_package_pin }}
         Pin-Priority: 1000
     mode: "0644"
-  become: True
+  become: true
   when: docker_apt_package_pin | length > 0
 
 - name: Ensure old docker repository absent
   file:
     path: /etc/apt/sources.list.d/docker.list
     state: absent
-  become: True
+  become: true
 
 # TODO(mmalchuk): replace with ansible.builtin.deb822_repository module
 # when all stable releases moves to the ansible-core >= 2.15
@@ -62,9 +62,9 @@
         Components: stable
         Signed-by: /etc/apt/keyrings/docker.asc
     mode: "0644"
-  become: True
+  become: true
 
 - name: Update the apt cache
   apt:
     update_cache: true
-  become: True
+  become: true

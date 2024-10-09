@@ -6,7 +6,7 @@
     mode: "0770"
     owner: "{{ config_owner_user }}"
     group: "{{ config_owner_group }}"
-  become: True
+  become: true
 
 - name: Copying CNI config file
   template:
@@ -15,7 +15,7 @@
     mode: "0660"
     owner: "{{ config_owner_user }}"
     group: "{{ config_owner_group }}"
-  become: True
+  become: true
   notify:
     - Restart containerd
 
@@ -26,14 +26,14 @@
     mode: "0770"
     owner: "{{ config_owner_user }}"
     group: "{{ config_owner_group }}"
-  become: True
+  become: true
 
 - name: Copy zun-cni script
   template:
     src: "zun-cni.j2"
     dest: "{{ cni_bin_dir }}/zun-cni"
     mode: "0775"
-  become: True
+  become: true
 
 - name: Copying over containerd config
   template:

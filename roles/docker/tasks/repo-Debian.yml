@@ -30,6 +30,7 @@
     mode: "0644"
     force: true
   become: true
+  environment: "{{ docker_apt_key_env }}"
 
 - name: Install docker apt pin
   copy:

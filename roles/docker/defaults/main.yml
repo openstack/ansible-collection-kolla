@@ -11,6 +11,9 @@ docker_apt_key_file: "gpg"
 docker_apt_package: "docker-ce"
 docker_apt_package_pin: ""
 
+# Set environment variables when fetching gpg keys, to use a proxy for example
+docker_apt_key_env: {}
+
 # Docker Yum repository configuration.
 docker_yum_url: "https://download.docker.com/linux/centos"
 docker_yum_baseurl: "{{ docker_yum_url }}/$releasever/$basearch/stable"

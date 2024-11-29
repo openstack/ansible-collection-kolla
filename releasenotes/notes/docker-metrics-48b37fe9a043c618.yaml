@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Adds the ``docker_metrics_addr`` variable to configure a Prometheus metrics
+    endpoint in Docker.

@@ -32,6 +32,8 @@
           soft: "{{ docker_ulimit_nofile_soft }}"
     docker_config_debug:
       debug: "{{ docker_debug }}"
+    docker_config_metrics_addr:
+      metrics-addr: "{{ docker_metrics_addr }}"
     docker_config: >-
       {{ default_docker_config
          | combine(docker_config_insecure_registries if docker_registry_insecure | bool else {})
@@ -43,6 +45,7 @@
          | combine(docker_config_ip_forward if docker_disable_ip_forward | bool else {})
          | combine(docker_config_ulimit_nofile if docker_ulimit_nofile | bool else {})
          | combine(docker_config_debug if docker_debug | bool else {})
+         | combine(docker_config_metrics_addr if docker_metrics_addr | length > 0 else {})
          | combine(docker_custom_config) }}
   ansible.builtin.copy:
     content: "{{ docker_config | to_nice_json }}"

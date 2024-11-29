@@ -69,6 +69,9 @@ docker_systemd_reload: false
 # Whether to enable debug logging
 docker_debug: false
 
+# Docker Prometheus metrics address
+docker_metrics_addr: ""
+
 # Folders in which docker stores any kind of data
 docker_paths:
   - /var/lib/docker

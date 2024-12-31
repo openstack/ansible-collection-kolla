@@ -1,10 +1,26 @@
 ---
 # List of RPM/APT packages to install.
-docker_sdk_packages:
+docker_sdk_packages_default:
   - "python3-setuptools"
   - "python3-pip"
   - "{% if docker_sdk_python_externally_managed | default(false) and virtualenv is none %}python3-docker{% endif %}"
   - "{% if docker_sdk_python_externally_managed | default(false) and virtualenv is none %}python3-dbus{% endif %}"
+
+docker_sdk_packages_dbus_deps_redhat:
+  - "gcc"
+  - "python3-devel"
+  - "dbus-glib-devel"
+  - "dbus-daemon"
+
+docker_sdk_packages_dbus_deps_debian:
+  - "build-essential"
+  - "python3-dev"
+  - "libdbus-glib-1-dev"
+
+docker_sdk_packages: >-
+  {{ docker_sdk_packages_default +
+     (vars[docker_sdk_packages_dbus_deps ~ (ansible_facts.os_family | lower)]
+      if virtualenv != none else []) }}
 
 # List of Python packages to install via Pip.
 # NOTE(mnasiadka) docker 3.0.0 is in kolla-ansible requirements

@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    With the ``docker_apt_key_env`` variable it is now possible to set
+    enviroment variables for the get_url module to pass http proxy config.
+    `LP#2086700 <https://launchpad.net/bugs/2086700>`__

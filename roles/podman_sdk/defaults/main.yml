@@ -1,6 +1,6 @@
 ---
 # List of RPM/APT packages to install.
-podman_sdk_packages:
+podman_sdk_packages_default:
   - "python3-setuptools"
   - "python3-pip"
   - "{% if podman_sdk_python_externally_managed | default(false) and virtualenv is none %}python3-podman{% endif %}"
@@ -11,6 +11,22 @@ podman_sdk_packages:
 podman_sdk_pip_packages:
   - "podman>=4.7.0"
   - "dbus-python"
+
+podman_sdk_packages_dbus_deps_redhat:
+  - "gcc"
+  - "python3-devel"
+  - "dbus-glib-devel"
+  - "dbus-daemon"
+podman_sdk_packages_dbus_deps_debian:
+  - "build-essential"
+  - "python3-dev"
+  - "libdbus-glib-1-dev"
+
+podman_sdk_packages: >-
+  {{ podman_sdk_packages_default +
+     (lookup('vars', 'podman_sdk_packages_dbus_deps_' ~ ansible_facts.os_family | lower)
+      if virtualenv is not none else []) }}
+
 
 # APT cache TTL in seconds.
 apt_cache_valid_time: 3600

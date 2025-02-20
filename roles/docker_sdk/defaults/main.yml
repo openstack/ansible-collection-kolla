@@ -19,8 +19,8 @@ docker_sdk_packages_dbus_deps_debian:
 
 docker_sdk_packages: >-
   {{ docker_sdk_packages_default +
-     (vars[docker_sdk_packages_dbus_deps ~ (ansible_facts.os_family | lower)]
-      if virtualenv != none else []) }}
+      (lookup('vars', 'docker_sdk_packages_dbus_deps_' ~ ansible_facts.os_family | lower)
+       if virtualenv is not none else []) }}
 
 # List of Python packages to install via Pip.
 # NOTE(mnasiadka) docker 3.0.0 is in kolla-ansible requirements

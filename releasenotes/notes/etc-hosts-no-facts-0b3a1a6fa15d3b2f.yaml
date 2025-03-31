@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    Allow creating ``/etc/hosts`` on all hosts when Ansible facts are not
+    gathered for all hosts. The IP address for a host in ``/etc/hosts``
+    may be hard-coded by setting ``etc_hosts_api_address`` in the inventory
+    for each host, and when there are no facts available for a host,
+    the FQDN and short hostname are generated from the Ansible
+    magic-variables ``inventory_hostname`` and ``inventory_hostname_short``.

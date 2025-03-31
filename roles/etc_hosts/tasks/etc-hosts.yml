@@ -30,8 +30,17 @@
         {% for host in groups['baremetal'] %}
         {% set api_interface = hostvars[host]['api_interface'] | replace('-', '_') %}
         {% if host not in groups['bifrost'] or api_interface in hostvars[host].ansible_facts %}
-        {% set hostnames = [hostvars[host].ansible_facts.nodename, hostvars[host].ansible_facts.hostname] %}
-        {{ 'api' | kolla_address(host) }} {{ hostnames | unique | join(' ') }}
+        {% set hostnames =
+          [
+            hostvars[host].ansible_facts.nodename
+            if hostvars[host].ansible_facts.nodename is defined
+            else hostvars[host].inventory_hostname,
+            hostvars[host].ansible_facts.hostname
+            if hostvars[host].ansible_facts.hostname is defined
+            else hostvars[host].inventory_hostname_short
+            ]
+        %}
+        {{ 'api' | kolla_address(host, override_var="etc_hosts_api_address") }} {{ hostnames | unique | join(' ') }}
         {% endif %}
         {% endfor %}
   become: true

@@ -7,15 +7,23 @@ docker_sdk_packages_default:
   - "{% if docker_sdk_python_externally_managed | default(false) and virtualenv is none %}python3-dbus{% endif %}"
 
 docker_sdk_packages_dbus_deps_redhat:
-  - "gcc"
-  - "python3-devel"
   - "dbus-glib-devel"
   - "dbus-daemon"
+  - "dbus-devel"
+  - "dbus-x11"
+  - "gcc"
+  - "glib2-devel"
+  - "python3-devel"
 
 docker_sdk_packages_dbus_deps_debian:
   - "build-essential"
-  - "python3-dev"
+  - "libdbus-1-dev"
   - "libdbus-glib-1-dev"
+  - "libglib2.0-dev"
+  - "pkg-config"
+  - "python3-dev"
+  - "python3-pip"
+  - "python3-venv"
 
 docker_sdk_packages: >-
   {{ docker_sdk_packages_default +

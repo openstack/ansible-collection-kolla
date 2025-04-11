@@ -60,6 +60,24 @@
     state: present
   become: true
 
+# NOTE(kevko) Packaging needs to be installed before ansible's pip module is used
+- name: Check if packaging is already installed
+  command: "{{ virtualenv }}/bin/pip show packaging"
+  become: true
+  become_user: "{{ docker_sdk_virtualenv_owner }}"
+  register: packaging_installed
+  failed_when: false
+  changed_when: false
+  check_mode: false
+  when: virtualenv is not none
+- name: Install packaging into virtualenv
+  command: "{{ virtualenv }}/bin/python -m pip install packaging"
+  become: true
+  become_user: "{{ docker_sdk_virtualenv_owner }}"
+  check_mode: false
+  changed_when: packaging_installed.rc != 0
+  when: virtualenv is not none and packaging_installed.rc != 0
+
 - name: Install latest pip in the virtualenv
   pip:
     # NOTE(hrw) pip 19.3 is first version complaining about being run with Python 2

@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    Fixes kolla-ansible boostrap-servers
+    `LP#2004583 <https://bugs.launchpad.net/kolla-ansible/+bug/2109509>`__

@@ -40,3 +40,10 @@
     scope: global
     value: "{{ git_http_proxy }}"
   when: git_http_proxy | length > 0
+
+- name: Copying over kolla.target
+  become: true
+  template:
+    src: kolla.target.j2
+    dest: /etc/systemd/system/kolla.target
+    mode: "0644"

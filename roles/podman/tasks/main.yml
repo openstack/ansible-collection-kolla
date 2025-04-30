@@ -1,2 +1,5 @@
 ---
 - include_tasks: "{{ package_action }}.yml"
+
+- name: Flush handlers
+  meta: flush_handlers

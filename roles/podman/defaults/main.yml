@@ -31,6 +31,13 @@ podman_paths:
 # Action taken on the packages
 package_action: "install"
 
+run_default_subdirectories:
+  - '/run/netns'
+  - '/run/lock/nova'
+  - "/run/libvirt"
+  - "/run/nova"
+  - "/run/openvswitch"
+
 # Podman containers config
 podman_custom_config: {}
 

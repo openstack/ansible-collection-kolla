@@ -2,10 +2,10 @@
 - name: Uninstall podman SDK for python
   pip:
     name: "{{ podman_sdk_core_pip_packages }}"
-    executable: "{{ virtualenv is none | ternary('pip3', omit) }}"
+    executable: "{{ (virtualenv is none) | ternary(ansible_facts.python.executable | regex_replace('python(\\d+(\\.\\d+)?)$', 'pip\\1'), omit) }}"
     virtualenv: "{{ virtualenv is none | ternary(omit, virtualenv) }}"
     virtualenv_site_packages: "{{ virtualenv is none | ternary(omit, virtualenv_site_packages) }}"
-    virtualenv_command: "{{ virtualenv is none | ternary(omit, 'python' ~ host_python_version ~ ' -m venv') }}"
+    virtualenv_command: "{{ virtualenv is none | ternary(omit, ansible_facts.python.executable ~ ' -m venv') }}"
     state: absent
   become: true
   become_user: "{{ virtualenv is none | ternary(omit, podman_sdk_virtualenv_owner) }}"

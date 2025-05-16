@@ -26,15 +26,11 @@ podman_sdk_packages_dbus_deps_debian:
 
 podman_sdk_packages: >-
   {{ podman_sdk_packages_default +
-     (lookup('vars', 'podman_sdk_packages_dbus_deps_' ~ ansible_facts.os_family | lower)
-      if virtualenv is not none else []) }}
-
+      (lookup('vars', 'podman_sdk_packages_dbus_deps_' ~ ansible_facts.os_family | lower)
+       if not (podman_sdk_python_externally_managed | default(false) and virtualenv is none) else []) }}
 
 # APT cache TTL in seconds.
 apt_cache_valid_time: 3600
-
-# Version of python used to execute Ansible modules.
-host_python_version: "{{ ansible_facts.python.version.major }}.{{ ansible_facts.python.version.minor }}"
 
 # Path to a virtualenv in which to install python packages. If None, a
 # virtualenv will not be used.

@@ -9,8 +9,6 @@
       jobs:
         - kolla-ansible-debian
         - kolla-ansible-debian-podman
-        - kolla-ansible-rocky9
-        - kolla-ansible-rocky9-podman
         - kolla-ansible-ubuntu
         - kolla-ansible-ubuntu-podman
         - kayobe-overcloud-ubuntu-jammy
@@ -26,8 +24,6 @@
       jobs:
         - kolla-ansible-debian
         - kolla-ansible-debian-podman
-        - kolla-ansible-rocky9
-        - kolla-ansible-rocky9-podman
         - kolla-ansible-ubuntu
         - kolla-ansible-ubuntu-podman
         - kayobe-overcloud-ubuntu-jammy

@@ -5,6 +5,7 @@ apt_cache_valid_time: 3600
 # List of packages to install.
 podman_packages:
   - "podman"
+  - "{{ 'catatonit' if ansible_facts.os_family == 'Debian' else '' }}"
 
 # Podman config variables
 podman_storage_driver:

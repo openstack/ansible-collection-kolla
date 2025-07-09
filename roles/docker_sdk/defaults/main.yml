@@ -7,7 +7,6 @@ docker_sdk_packages_default:
   - "{% if docker_sdk_python_externally_managed | default(false) and virtualenv is none %}python3-dbus{% endif %}"
 
 docker_sdk_packages_dbus_deps_redhat:
-  - "dbus-glib-devel"
   - "dbus-daemon"
   - "dbus-devel"
   - "dbus-x11"

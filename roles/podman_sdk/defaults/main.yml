@@ -15,9 +15,6 @@ podman_sdk_pip_packages:
 # APT cache TTL in seconds.
 apt_cache_valid_time: 3600
 
-# Version of python used to execute Ansible modules.
-host_python_version: "{{ ansible_facts.python.version.major }}.{{ ansible_facts.python.version.minor }}"
-
 # Path to a virtualenv in which to install python packages. If None, a
 # virtualenv will not be used.
 virtualenv:

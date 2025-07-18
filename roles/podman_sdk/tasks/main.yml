@@ -76,7 +76,14 @@
     state: present
   become: true
 
+- name: Check if virtualenv is a directory
+  stat:
+    path: "{{ virtualenv }}"
+  register: virtualenv_stat
+  when: virtualenv is not none and virtualenv | length > 0
+
 # NOTE(kevko) Packaging needs to be installed before ansible's pip module is used
+# This is in case user created venv manually
 - name: Check if packaging is already installed
   command: "{{ virtualenv }}/bin/pip show packaging"
   become: true
@@ -85,22 +92,34 @@
   failed_when: false
   changed_when: false
   check_mode: false
-  when: virtualenv is not none
+  when:
+    - virtualenv is not none
+    - virtualenv | length > 0
+    - virtualenv_stat.stat.isdir is defined
+    - virtualenv_stat.stat.isdir
+
 - name: Install packaging into virtualenv
   command: "{{ virtualenv }}/bin/python -m pip install packaging"
   become: true
   become_user: "{{ docker_sdk_virtualenv_owner }}"
   check_mode: false
   changed_when: packaging_installed.rc != 0
-  when: virtualenv is not none and packaging_installed.rc != 0
+  when:
+    - virtualenv is not none
+    - virtualenv | length > 0
+    - virtualenv_stat.stat.isdir is defined
+    - virtualenv_stat.stat.isdir
+    - packaging_installed.rc != 0
 
-- name: Install latest pip in the virtualenv
+- name: Install latest pip and packaging in the virtualenv
   pip:
     # NOTE(hrw) pip 19.3 is first version complaining about being run with Python 2
-    name: pip>19.3
+    name:
+      - "pip>19.3"
+      - "packaging"
     virtualenv: "{{ virtualenv }}"
     virtualenv_site_packages: "{{ virtualenv_site_packages }}"
-    virtualenv_command: "python{{ host_python_version }} -m venv"
+    virtualenv_command: "{{ ansible_facts.python.executable }} -m venv"
   become: true
   become_user: "{{ podman_sdk_virtualenv_owner }}"
   when: virtualenv is not none
@@ -108,11 +127,11 @@
 - name: Install podman SDK for python
   pip:
     name: "{{ podman_sdk_pip_packages }}"
-    executable: "{{ virtualenv is none | ternary('pip3', omit) }}"
+    executable: "{{ (virtualenv is none) | ternary(ansible_facts.python.executable | regex_replace('python(\\d+(\\.\\d+)?)$', 'pip\\1'), omit) }}"
     extra_args: "{% if podman_sdk_upper_constraints_file %}-c {{ podman_sdk_upper_constraints_file }}{% endif %}"
     virtualenv: "{{ virtualenv is none | ternary(omit, virtualenv) }}"
     virtualenv_site_packages: "{{ virtualenv is none | ternary(omit, virtualenv_site_packages) }}"
-    virtualenv_command: "{{ virtualenv is none | ternary(omit, 'python' ~ host_python_version ~ ' -m venv') }}"
+    virtualenv_command: "{{ virtualenv is none | ternary(omit, ansible_facts.python.executable ~ ' -m venv') }}"
   become: true
   become_user: "{{ virtualenv is none | ternary(omit, podman_sdk_virtualenv_owner) }}"
   when: not (podman_sdk_python_externally_managed | default(false) and virtualenv is none)

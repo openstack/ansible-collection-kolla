@@ -63,6 +63,7 @@
   when:
     - podman_registry is not none
     - podman_registry_ca is not none
+    - not podman_registry_insecure | bool
 
 - name: Ensure the CA file for private registry exists
   copy:
@@ -75,3 +76,4 @@
   when:
     - podman_registry is not none
     - podman_registry_ca is not none
+    - not podman_registry_insecure | bool

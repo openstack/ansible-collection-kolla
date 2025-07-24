@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The tasks related to installing CA file for private registry will now
+    only run if either ``docker_registry_insecure`` or
+    ``podman_registry_insecure`` is set to false.

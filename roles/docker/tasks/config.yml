@@ -99,7 +99,10 @@
     mode: "0700"
     state: directory
   become: true
-  when: docker_registry is not none and docker_registry_ca is not none
+  when: >
+    docker_registry is not none and
+    docker_registry_ca is not none and
+    not docker_registry_insecure | bool
 
 - name: Ensure the CA file for private registry exists
   copy:
@@ -109,7 +112,10 @@
     group: root
     mode: "0600"
   become: true
-  when: docker_registry is not none and docker_registry_ca is not none
+  when: >
+    docker_registry is not none and
+    docker_registry_ca is not none and
+    not docker_registry_insecure | bool
   notify:
     - Restart docker
 

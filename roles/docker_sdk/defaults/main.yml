@@ -9,7 +9,6 @@ docker_sdk_packages_default:
 docker_sdk_packages_dbus_deps_redhat:
   - "dbus-daemon"
   - "dbus-devel"
-  - "dbus-x11"
   - "gcc"
   - "glib2-devel"
   - "python3-devel"

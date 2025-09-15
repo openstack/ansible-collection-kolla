@@ -15,10 +15,13 @@ podman_sdk_additional_pip_packages:
   - "dbus-python"
 
 podman_sdk_packages_dbus_deps_redhat:
-  - "gcc"
-  - "python3-devel"
-  - "dbus-glib-devel"
   - "dbus-daemon"
+  - "dbus-devel"
+  - "{{ 'dbus-glib-devel' if ansible_facts.distribution_major_version == '9' }}"
+  - "gcc"
+  - "glib2-devel"
+  - "python3-devel"
+
 podman_sdk_packages_dbus_deps_debian:
   - "build-essential"
   - "python3-dev"

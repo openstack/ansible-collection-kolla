@@ -30,3 +30,24 @@ podman_paths:
 
 # Action taken on the packages
 package_action: "install"
+
+# Podman containers config
+podman_custom_config: {}
+
+# NOTE(chembervint): This option disables by default logs about periodic
+# healthchecks for each container into the system journal. Option could be
+# enabled for debug reasons
+podman_healthcheck_events: false
+# NOTE(chembervint): Set maximum container log size to 50M, similar to
+# docker_log_max_size
+podman_log_max_size: 52428800
+
+podman_engine_config:
+  engine:
+    events_logger: "file"
+    healthcheck_events: "{{ podman_healthcheck_events }}"
+
+podman_containers_config:
+  containers:
+    log_size_max: "{{ podman_log_max_size }}"
+    log_driver: "k8s-file"

@@ -65,6 +65,13 @@
     - podman_registry_ca is not none
     - not podman_registry_insecure | bool
 
+- name: Write kolla.conf to containers.conf.d
+  template:
+    src: "kolla.conf.j2"
+    dest: "/etc/containers/containers.conf.d/kolla.conf"
+    mode: "0664"
+  become: true
+
 - name: Ensure the CA file for private registry exists
   copy:
     src: "{{ private_registry_ca }}"

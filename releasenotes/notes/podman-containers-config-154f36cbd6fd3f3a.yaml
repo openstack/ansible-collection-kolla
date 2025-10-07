@@ -1,0 +1,26 @@
+---
+features:
+  - |
+    Introduced default container configuration for Podman deployments, along
+    with the new 'podman_custom_config' variable. This allows operators to
+    customize Podman container settings, similar to how 'docker_custom_config'
+    is used for Docker.
+
+    Add default container config with next options:
+      - ``events_logger: "file"``
+      - ``healthcheck_events: {{ podman_healthcheck_events }}``
+      - ``log_size_max: {{ podman_log_max_size }}``
+      - ``log_driver: "k8s-file"``
+
+    New variables:
+      - ``podman_healthcheck_events: false``
+      - ``podman_log_max_size: 52428800``
+
+    .. code-block:: text
+
+      podman_custom_config:
+        section1:
+          option1: bool_value
+          option2: int_value
+        section2:
+          option3: "str_value"

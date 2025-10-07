@@ -1,0 +1,28 @@
+{% macro render_toml_value(value) -%}
+{%- if value is mapping -%}
+# Not directly used here, handled by render_toml_section
+{%- elif value is iterable and value is not string -%}
+[{{ value | map('tojson') | join(', ') }}]
+{%- elif value is boolean -%}
+{{ 'true' if value else 'false' }}
+{%- elif value is number -%}
+{{ value }}
+{%- elif value is string -%}
+"{{ value | replace('"', '\\"') }}"
+{%- else -%}
+# Handle nulls/None if necessary, e.g., "" or a comment
+{%- endif -%}
+{%- endmacro -%}
+
+{% set podman_config = podman_engine_config
+   | combine(podman_containers_config, recursive=True)
+   | combine(podman_custom_config, recursive=True)
+%}
+{% for section, settings in podman_config.items() %}
+[{{ section }}]
+{% for key, value in settings.items() %}
+{{ key }} = {{ render_toml_value(value) }}
+{% endfor %}{% if not loop.last %}
+
+{% endif %}
+{% endfor %}

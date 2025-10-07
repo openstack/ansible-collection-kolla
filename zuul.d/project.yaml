@@ -7,10 +7,19 @@
       - release-notes-jobs-python3
     check:
       jobs:
-        - kolla-ansible-debian
-        - kolla-ansible-debian-podman
-        - kolla-ansible-ubuntu
-        - kolla-ansible-ubuntu-podman
+        - kolla-ansible-debian-bookworm:
+            files: &ack_files
+              - roles/
+        - kolla-ansible-debian-bookworm-podman:
+            files: *ack_files
+        - kolla-ansible-rocky-10:
+            files: *ack_files
+        - kolla-ansible-rocky-10-podman:
+            files: *ack_files
+        - kolla-ansible-ubuntu-noble:
+            files: *ack_files
+        - kolla-ansible-ubuntu-noble-podman:
+            files: *ack_files
         - kayobe-overcloud-rocky9:
             voting: false
         - kayobe-overcloud-host-configure-rocky9
@@ -19,14 +28,22 @@
         - kayobe-overcloud-ubuntu-noble-podman
     check-arm64:
       jobs:
-        - kolla-ansible-debian-aarch64
-        - kolla-ansible-debian-aarch64-podman
+        - kolla-ansible-debian-bookworm-aarch64
+        - kolla-ansible-debian-bookworm-aarch64-podman
     gate:
       jobs:
-        - kolla-ansible-debian
-        - kolla-ansible-debian-podman
-        - kolla-ansible-ubuntu
-        - kolla-ansible-ubuntu-podman
+        - kolla-ansible-debian-bookworm:
+            files: *ack_files
+        - kolla-ansible-debian-bookworm-podman:
+            files: *ack_files
+        - kolla-ansible-rocky-10:
+            files: *ack_files
+        - kolla-ansible-rocky-10-podman:
+            files: *ack_files
+        - kolla-ansible-ubuntu-noble:
+            files: *ack_files
+        - kolla-ansible-ubuntu-noble-podman:
+            files: *ack_files
         - kayobe-overcloud-host-configure-rocky9
         - kayobe-overcloud-host-configure-ubuntu-noble
         - kayobe-overcloud-ubuntu-noble

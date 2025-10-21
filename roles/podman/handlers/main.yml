@@ -4,3 +4,11 @@
   ansible.builtin.command:
     cmd: systemd-tmpfiles --create
   changed_when: true
+
+- name: Reload podman service file
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: podman.service
+    state: restarted
+  when: ansible_facts.service_mgr == 'systemd'

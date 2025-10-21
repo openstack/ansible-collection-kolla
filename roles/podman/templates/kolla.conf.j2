@@ -14,9 +14,25 @@
 {%- endif -%}
 {%- endmacro -%}
 
+{% set proxy_config = {} %}
+{% if podman_http_proxy | length > 0 or podman_https_proxy | length > 0 or podman_no_proxy | length > 0 %}
+  {% set proxy_env = [] %}
+  {% if podman_http_proxy | length > 0 %}
+    {% set _ = proxy_env.append('http_proxy=' + podman_http_proxy) %}
+  {% endif %}
+  {% if podman_https_proxy | length > 0 %}
+    {% set _ = proxy_env.append('https_proxy=' + podman_https_proxy) %}
+  {% endif %}
+  {% if podman_no_proxy | length > 0 %}
+    {% set _ = proxy_env.append('no_proxy=' + podman_no_proxy) %}
+  {% endif %}
+  {% set _ = proxy_config.update({'engine': {'env': proxy_env}}) %}
+{% endif %}
+
 {% set podman_config = podman_engine_config
    | combine(podman_containers_config, recursive=True)
    | combine(podman_custom_config, recursive=True)
+   | combine(proxy_config, recursive=True)
 %}
 {% for section, settings in podman_config.items() %}
 [{{ section }}]

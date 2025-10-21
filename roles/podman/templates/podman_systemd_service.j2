@@ -1,0 +1,10 @@
+[Service]
+{% if podman_http_proxy | length > 0 %}
+Environment="HTTP_PROXY={{ podman_http_proxy }}"
+{% endif %}
+{% if podman_https_proxy | length > 0 %}
+Environment="HTTPS_PROXY={{ podman_https_proxy }}"
+{% endif %}
+{% if podman_no_proxy | length > 0 %}
+Environment="NO_PROXY={{ podman_no_proxy }}"
+{% endif %}

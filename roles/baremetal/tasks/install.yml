@@ -1,25 +1,19 @@
 ---
-# TODO(inc0): Gates don't seem to have ufw executable, check for it instead of ignore errors
 - name: Disable firewall
   when: disable_firewall | bool
   block:
+    - name: Gather package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
     - name: Set firewall default policy
-      # noqa ignore-errors
       become: true
       community.general.ufw:
         state: disabled
         policy: allow
-      when: ansible_facts.os_family == 'Debian'
-      ignore_errors: true
-
-    - name: Check if firewalld is installed
-      # noqa command-instead-of-module
-      ansible.builtin.command:
-        cmd: rpm -q firewalld
-      register: firewalld_check
-      changed_when: false
-      failed_when: firewalld_check.rc > 1
-      when: ansible_facts.os_family == 'RedHat'
+      when:
+        - ansible_facts.os_family == 'Debian'
+        - ansible_facts.packages['ufw'] is defined
 
     - name: Disable firewalld
       become: true
@@ -31,7 +25,7 @@
         - firewalld
       when:
         - ansible_facts.os_family == 'RedHat'
-        - firewalld_check.rc == 0
+        - ansible_facts.packages['firewalld'] is defined
 
 - name: Import packages role
   ansible.builtin.import_role:

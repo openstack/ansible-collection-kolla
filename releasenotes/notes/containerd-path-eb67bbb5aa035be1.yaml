@@ -1,0 +1,11 @@
+---
+upgrade:
+  - |
+    containerd ``root`` path default has been changed from distribution
+    default to ``/var/lib/docker/containerd`` when using ``docker`` role.
+fixes:
+  - |
+    Due to changes in docker-ce 29 that switched default image store engine
+    to ``containerd``, containerd ``root`` path default has been changed from
+    distribution default to ``/var/lib/docker/containerd`` when using
+    ``docker`` role.

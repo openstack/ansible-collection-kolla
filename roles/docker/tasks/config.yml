@@ -52,6 +52,35 @@
   notify:
     - Restart docker
 
+- meta: flush_handlers
+
+- name: Get Docker API version
+  become: true
+  ansible.builtin.command:
+    cmd: "docker system info -f json"
+  changed_when: false
+  register: docker_system_info
+
+- name: Parse Docker system info
+  ansible.builtin.set_fact:
+    docker_system_info_json: "{{ docker_system_info.stdout | default('{}') | from_json }}"
+
+- name: Determine if Docker uses containerd image store
+  ansible.builtin.set_fact:
+    docker_storage_containerd: "{{ (docker_system_info_json.ServerVersion | default('')) is version('29.0.0', '>=') }}"
+
+- name: Copying over containerd config
+  when:
+    - docker_storage_containerd | bool
+    - not containerd_configure_for_zun | bool
+  template:
+    src: "containerd_config.toml.j2"
+    dest: "/etc/containerd/config.toml"
+    mode: "0660"
+  become: true
+  notify:
+    - Restart containerd
+
 - name: Remove old docker options file
   become: true
   file:

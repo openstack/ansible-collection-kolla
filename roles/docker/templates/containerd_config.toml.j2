@@ -1,2 +1,9 @@
+{% if docker_configure_for_zun | bool %}
 [grpc]
   gid = {{ containerd_grpc_gid }}
+{% else %}
+disabled_plugins = ["cri"]
+{% endif %}
+{% if docker_storage_containerd is defined and docker_storage_containerd | bool %}
+root = "{{ containerd_root_path }}"
+{% endif %}

@@ -1,10 +1,10 @@
 ---
 - name: Ensure docker config directory exists
-  file:
+  become: true
+  ansible.builtin.file:
     path: /etc/docker
     state: directory
     mode: "0755"
-  become: true
 
 - name: Write docker config
   become: true
@@ -45,14 +45,15 @@
          | combine(docker_config_ulimit_nofile if docker_ulimit_nofile | bool else {})
          | combine(docker_config_debug if docker_debug | bool else {})
          | combine(docker_custom_config) }}
-  copy:
+  ansible.builtin.copy:
     content: "{{ docker_config | to_nice_json }}"
     dest: /etc/docker/daemon.json
     mode: "0644"
   notify:
     - Restart docker
 
-- meta: flush_handlers
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Get Docker API version
   become: true
@@ -70,91 +71,91 @@
     docker_storage_containerd: "{{ (docker_system_info_json.ServerVersion | default('')) is version('29.0.0', '>=') }}"
 
 - name: Copying over containerd config
+  become: true
   when:
     - docker_storage_containerd | bool
     - not containerd_configure_for_zun | bool
-  template:
+  ansible.builtin.template:
     src: "containerd_config.toml.j2"
     dest: "/etc/containerd/config.toml"
     mode: "0660"
-  become: true
   notify:
     - Restart containerd
 
 - name: Remove old docker options file
   become: true
-  file:
-    path: /etc/systemd/system/docker.service.d/kolla.conf
-    state: absent
   when:
     - not docker_configure_for_zun | bool or 'zun-compute' not in group_names
     - not docker_http_proxy
     - not docker_https_proxy
     - not docker_no_proxy
+  ansible.builtin.file:
+    path: /etc/systemd/system/docker.service.d/kolla.conf
+    state: absent
   notify:
     - Reload docker service file
 
 - name: Ensure docker service directory exists
   become: true
-  file:
+  when: >
+    (docker_configure_for_zun | bool and 'zun-compute' in group_names) or
+    docker_http_proxy | length > 0 or
+    docker_https_proxy | length > 0 or
+    docker_no_proxy | length > 0
+  ansible.builtin.file:
     path: /etc/systemd/system/docker.service.d
     state: directory
     recurse: true
-  when: >
-    (docker_configure_for_zun | bool and 'zun-compute' in group_names) or
-    docker_http_proxy | length > 0 or
-    docker_https_proxy | length > 0 or
-    docker_no_proxy | length > 0
 
 - name: Configure docker service
   become: true
-  template:
-    src: docker_systemd_service.j2
-    dest: /etc/systemd/system/docker.service.d/kolla.conf
-    mode: "0644"
   when: >
     (docker_configure_for_zun | bool and 'zun-compute' in group_names) or
     docker_http_proxy | length > 0 or
     docker_https_proxy | length > 0 or
     docker_no_proxy | length > 0
+  ansible.builtin.template:
+    src: docker_systemd_service.j2
+    dest: /etc/systemd/system/docker.service.d/kolla.conf
+    mode: "0644"
   notify:
     - Reload docker service file
 
 - name: Ensure the path for CA file for private registry exists
-  file:
+  become: true
+  when: >
+    docker_registry is not none and
+    docker_registry_ca is not none and
+    not docker_registry_insecure | bool
+  ansible.builtin.file:
     path: "/etc/docker/certs.d/{{ docker_registry }}"
     owner: root
     group: root
     mode: "0700"
     state: directory
+
+- name: Ensure the CA file for private registry exists
   become: true
   when: >
     docker_registry is not none and
     docker_registry_ca is not none and
     not docker_registry_insecure | bool
-
-- name: Ensure the CA file for private registry exists
-  copy:
+  ansible.builtin.copy:
     src: "{{ docker_registry_ca }}"
     dest: "/etc/docker/certs.d/{{ docker_registry }}/ca.crt"
     owner: root
     group: root
     mode: "0600"
-  become: true
-  when: >
-    docker_registry is not none and
-    docker_registry_ca is not none and
-    not docker_registry_insecure | bool
   notify:
     - Restart docker
 
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers
 
 - name: Start and enable docker
-  systemd:
+  become: true
+  ansible.builtin.systemd:
     name: docker
     state: started
     enabled: true
     masked: false
-  become: true

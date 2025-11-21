@@ -1,18 +1,19 @@
 ---
 - name: Get stat of libvirtd apparmor profile
-  stat:
+  ansible.builtin.stat:
     path: /etc/apparmor.d/usr.sbin.libvirtd
   register: apparmor_libvirtd_profile
 
 - name: Get stat of libvirtd apparmor disable profile
-  stat:
+  ansible.builtin.stat:
     path: /etc/apparmor.d/disable/usr.sbin.libvirtd
   register: apparmor_libvirtd_disable_profile
 
 - name: Remove apparmor profile for libvirt
-  shell: |
-    apparmor_parser -v -R /etc/apparmor.d/usr.sbin.libvirtd && \
-    ln -vsf /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable
+  ansible.builtin.shell:
+    cmd: |
+      apparmor_parser -v -R /etc/apparmor.d/usr.sbin.libvirtd && \
+      ln -vsf /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable
   args:
     executable: /bin/bash
   become: true

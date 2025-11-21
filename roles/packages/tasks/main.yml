@@ -1,22 +1,22 @@
 ---
 - name: Install packages
+  become: true
   vars:
     pkg_installs: >-
       {{ ubuntu_pkg_install if ansible_facts.os_family == 'Debian'
          else redhat_pkg_install }}
-  package:
+  ansible.builtin.package:
     name: "{{ pkg_installs | select | list }}"
     cache_valid_time: "{{ apt_cache_valid_time if ansible_facts.os_family == 'Debian' else omit }}"
     update_cache: "{{ True if ansible_facts.os_family == 'Debian' else omit }}"
     state: present
-  become: true
 
 - name: Remove packages
+  become: true
   vars:
     pkg_removals: >-
       {{ ubuntu_pkg_removals if ansible_facts.os_family == 'Debian'
          else redhat_pkg_removals }}
-  package:
+  ansible.builtin.package:
     name: "{{ pkg_removals | select | list }}"
     state: absent
-  become: true

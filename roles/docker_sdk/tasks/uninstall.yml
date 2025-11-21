@@ -1,6 +1,6 @@
 ---
 - name: Uninstall docker SDK for python using pip
-  pip:
+  ansible.builtin.pip:
     name: "{{ docker_sdk_core_pip_packages }}"
     executable: "{{ (virtualenv is none) | ternary(ansible_facts.python.executable | regex_replace('python(\\d+(\\.\\d+)?)$', 'pip\\1'), omit) }}"
     virtualenv: "{{ virtualenv is none | ternary(omit, virtualenv) }}"

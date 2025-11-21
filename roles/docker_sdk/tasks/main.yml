@@ -14,8 +14,8 @@
       register: python_externally_managed
 
     - name: Set docker_sdk_python_externally_managed fact
-      set_fact:
+      ansible.builtin.set_fact:
         docker_sdk_python_externally_managed: true
       when: python_externally_managed.stat.exists
 
-- include_tasks: "{{ package_action }}.yml"
+- ansible.builtin.include_tasks: "{{ package_action }}.yml"

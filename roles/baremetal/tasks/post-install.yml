@@ -1,49 +1,49 @@
 ---
-- import_role:
+- ansible.builtin.import_role:
     name: openstack.kolla.kolla_user
   when: create_kolla_user | bool
 
-- import_role:
+- ansible.builtin.import_role:
     name: openstack.kolla.{{ container_engine }}_sdk
 
 - name: Ensure node_config_directory directory exists
-  file:
+  become: true
+  ansible.builtin.file:
     path: "{{ node_config_directory }}"
     state: directory
     owner: "{{ kolla_user if create_kolla_user | bool else omit }}"
     group: "{{ kolla_group if create_kolla_user | bool else omit }}"
     mode: "0755"
-  become: true
 
-- import_role:
+- ansible.builtin.import_role:
     name: openstack.kolla.apparmor_libvirt
 
 - name: Change state of selinux
-  selinux:
-    policy: targeted
-    state: "{{ selinux_state }}"
   become: true
   when:
     - change_selinux | bool
     - ansible_facts.os_family == "RedHat"
+  ansible.posix.selinux:
+    policy: targeted
+    state: "{{ selinux_state }}"
 
 - name: Set https proxy for git
-  git_config:
+  when: git_https_proxy | length > 0
+  community.general.git_config:
     name: https.proxy
     scope: global
     value: "{{ git_https_proxy }}"
-  when: git_https_proxy | length > 0
 
 - name: Set http proxy for git
-  git_config:
+  when: git_http_proxy | length > 0
+  community.general.git_config:
     name: http.proxy
     scope: global
     value: "{{ git_http_proxy }}"
-  when: git_http_proxy | length > 0
 
 - name: Copying over kolla.target
   become: true
-  template:
+  ansible.builtin.template:
     src: kolla.target.j2
     dest: /etc/systemd/system/kolla.target
     mode: "0644"

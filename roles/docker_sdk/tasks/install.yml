@@ -1,5 +1,9 @@
 ---
 - name: Configure osbpo apt repository
+  when:
+    - ansible_facts.distribution == 'Debian'
+    - docker_sdk_python_externally_managed | default(false)
+    - virtualenv is none
   block:
     - name: Ensure apt sources list directory exists
       file:
@@ -27,10 +31,6 @@
         repo: "{{ docker_sdk_osbpo_apt_repo }}"
         filename: osbpo
       become: true
-  when:
-    - ansible_facts.distribution == 'Debian'
-    - docker_sdk_python_externally_managed | default(false)
-    - virtualenv is none
 
 - name: Install packages
   package:

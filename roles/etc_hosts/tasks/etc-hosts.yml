@@ -54,6 +54,7 @@
 # every boot, which will break RabbitMQ. To prevent this happens, first we check whether cloud-init
 # has been installed, and then set manage_etc_hosts to false.
 - name: Check whether cloud-init has been installed, and ensure manage_etc_hosts is disabled
+  become: true
   block:
     - name: Check whether /etc/cloud/cloud.cfg exists
       stat:
@@ -66,4 +67,3 @@
         dest: /etc/cloud/cloud.cfg.d/99-kolla.cfg
         mode: "0660"
       when: cloud_init.stat.exists
-  become: true

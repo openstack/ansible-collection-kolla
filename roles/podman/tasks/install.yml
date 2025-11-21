@@ -28,7 +28,11 @@
     state: started
     enabled: true
 
-- block:
+- when:
+    - podman_install_result.changed
+    - running_containers.rc == 0
+    - running_containers.stdout != ''
+  block:
     - name: Wait for Podman to start
       command: podman info
       become: true
@@ -42,9 +46,5 @@
       command: "podman start {{ running_containers.stdout }}"
       become: true
       changed_when: true
-  when:
-    - podman_install_result.changed
-    - running_containers.rc == 0
-    - running_containers.stdout != ''
 
 - import_tasks: config.yml

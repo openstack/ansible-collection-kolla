@@ -15,7 +15,8 @@
 
 # APT starts Docker engine right after installation, which creates
 # iptables rules before we disable iptables in Docker config
-- block:
+- when: ansible_facts.os_family == 'Debian'
+  block:
     - name: Check if docker systemd unit exists
       stat:
         path: /etc/systemd/system/docker.service
@@ -30,7 +31,6 @@
         state: link
       become: true
       when: not docker_unit_file.stat.exists
-  when: ansible_facts.os_family == 'Debian'
 
 - name: Install packages
   package:
@@ -44,7 +44,11 @@
 # If any packages were updated, and any containers were running, wait for the
 # daemon to come up and start all previously running containers.
 
-- block:
+- when:
+    - docker_install_result is changed
+    - running_containers.rc == 0
+    - running_containers.stdout != ''
+  block:
     # At some point (at least on CentOS 7) Docker CE stopped starting
     # automatically after an upgrade from legacy docker . Start it manually.
     - name: Start docker
@@ -69,10 +73,6 @@
       command: "docker start {{ running_containers.stdout }}"
       become: true
       changed_when: true
-  when:
-    - docker_install_result is changed
-    - running_containers.rc == 0
-    - running_containers.stdout != ''
 
 - import_tasks: config.yml
 

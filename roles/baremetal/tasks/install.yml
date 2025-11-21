@@ -1,6 +1,7 @@
 ---
 # TODO(inc0): Gates don't seem to have ufw executable, check for it instead of ignore errors
-- block:
+- when: disable_firewall | bool
+  block:
     - name: Set firewall default policy
       # noqa ignore-errors
       become: true
@@ -29,7 +30,6 @@
       when:
         - ansible_facts.os_family == 'RedHat'
         - firewalld_check.rc == 0
-  when: disable_firewall | bool
 
 - import_role:
     name: openstack.kolla.packages

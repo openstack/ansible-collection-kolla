@@ -1,5 +1,10 @@
 ---
 - name: Configure osbpo apt repository
+  become: true
+  when:
+    - ansible_facts.distribution == 'Debian'
+    - podman_sdk_python_externally_managed | default(false)
+    - virtualenv is none
   block:
     - name: Ensure apt sources list directory exists
       file:
@@ -42,11 +47,6 @@
     - name: Update the apt cache
       apt:
         update_cache: true
-  when:
-    - ansible_facts.distribution == 'Debian'
-    - podman_sdk_python_externally_managed | default(false)
-    - virtualenv is none
-  become: true
 
 - name: Install packages
   package:

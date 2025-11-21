@@ -1,5 +1,6 @@
 ---
 - name: Handling for Python3.10+ externally managed environments
+  when: ansible_facts.python.version.major == 3 and ansible_facts.python.version.minor >= 10
   block:
     - name: Get Python
       ansible.builtin.command:
@@ -16,7 +17,5 @@
       set_fact:
         docker_sdk_python_externally_managed: true
       when: python_externally_managed.stat.exists
-
-  when: ansible_facts.python.version.major == 3 and ansible_facts.python.version.minor >= 10
 
 - include_tasks: "{{ package_action }}.yml"

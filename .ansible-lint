@@ -9,8 +9,6 @@ skip_list:
  # Galaxy changelog and runtime defined
  - galaxy[no-changelog]
  - galaxy[no-runtime]
- # don't fail on when at the end of block
- - key-order[task]
  # All tasks should be named
  - name[missing]
  # Variables names from within roles should use role_name_ as a prefix

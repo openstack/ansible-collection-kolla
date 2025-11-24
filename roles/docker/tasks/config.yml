@@ -63,11 +63,15 @@
 
 - name: Parse Docker system info
   ansible.builtin.set_fact:
-    docker_system_info_json: "{{ docker_system_info.stdout | default('{}') | from_json }}"
+    docker_system_info_json: "{{ docker_system_info.stdout | default('{}', true) | from_json }}"
 
 - name: Determine if Docker uses containerd image store
   ansible.builtin.set_fact:
-    docker_storage_containerd: "{{ (docker_system_info_json.ServerVersion | default('')) is version('29.0.0', '>=') }}"
+    docker_storage_containerd: >-
+      {{
+        (docker_system_info_json.ServerVersion | default('0.0.0', true))
+          is version('29.0.0', '>=')
+      }}
 
 - name: Copying over containerd config
   when:

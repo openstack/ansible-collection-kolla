@@ -20,10 +20,10 @@
             files: *ack_files
         - kolla-ansible-ubuntu-noble-podman:
             files: *ack_files
-        - kayobe-overcloud-rocky9:
-            voting: false
-        - kayobe-overcloud-host-configure-rocky9
+        - kayobe-overcloud-host-configure-rocky10
         - kayobe-overcloud-host-configure-ubuntu-noble
+        - kayobe-overcloud-rocky10
+        - kayobe-overcloud-rocky10-podman
         - kayobe-overcloud-ubuntu-noble
         - kayobe-overcloud-ubuntu-noble-podman
     check-arm64:
@@ -44,7 +44,9 @@
             files: *ack_files
         - kolla-ansible-ubuntu-noble-podman:
             files: *ack_files
-        - kayobe-overcloud-host-configure-rocky9
+        - kayobe-overcloud-host-configure-rocky10
         - kayobe-overcloud-host-configure-ubuntu-noble
+        - kayobe-overcloud-rocky10
+        - kayobe-overcloud-rocky10-podman
         - kayobe-overcloud-ubuntu-noble
         - kayobe-overcloud-ubuntu-noble-podman

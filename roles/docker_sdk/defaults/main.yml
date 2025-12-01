@@ -7,10 +7,10 @@ docker_sdk_packages_default:
   - "{% if docker_sdk_python_externally_managed | default(false) and virtualenv is none %}python3-dbus{% endif %}"
 
 docker_sdk_packages_dbus_deps_redhat:
-  - "dbus-glib-devel"
+  - "{{ 'dbus-glib-devel' if ansible_facts.distribution_major_version == '9' }}"
   - "dbus-daemon"
   - "dbus-devel"
-  - "dbus-x11"
+  - "{{ 'dbus-x11' if ansible_facts.distribution_major_version == '9' }}"
   - "gcc"
   - "glib2-devel"
   - "python3-devel"

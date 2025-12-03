@@ -1,2 +1,2 @@
 ---
-- include_tasks: "{{ package_action }}.yml"
+- ansible.builtin.include_tasks: "{{ package_action }}.yml"

@@ -5,7 +5,7 @@
     - name: Set firewall default policy
       # noqa ignore-errors
       become: true
-      ufw:
+      community.general.ufw:
         state: disabled
         policy: allow
       when: ansible_facts.os_family == 'Debian'
@@ -13,7 +13,8 @@
 
     - name: Check if firewalld is installed
       # noqa command-instead-of-module
-      command: rpm -q firewalld
+      ansible.builtin.command:
+        cmd: rpm -q firewalld
       register: firewalld_check
       changed_when: false
       failed_when: firewalld_check.rc > 1
@@ -21,7 +22,7 @@
 
     - name: Disable firewalld
       become: true
-      service:
+      ansible.builtin.service:
         name: "{{ item }}"
         enabled: false
         state: stopped
@@ -31,8 +32,8 @@
         - ansible_facts.os_family == 'RedHat'
         - firewalld_check.rc == 0
 
-- import_role:
+- ansible.builtin.import_role:
     name: openstack.kolla.packages
 
-- import_role:
+- ansible.builtin.import_role:
     name: openstack.kolla.{{ container_engine }}

@@ -1,6 +1,6 @@
 ---
 - name: Ensure podman config directory exists
-  file:
+  ansible.builtin.file:
     path: /etc/containers/{{ item }}
     state: directory
     mode: "0755"
@@ -17,7 +17,7 @@
       [[registry]]
       location = "{{ podman_registry }}"
       insecure = {{ podman_registry_insecure | bool | lower }}
-  copy:
+  ansible.builtin.copy:
     content: "{{ registry }}"
     dest: /etc/containers/registries.conf.d/registries.conf
     mode: "0644"
@@ -30,7 +30,7 @@
       [[registry.mirror]]
       prefix = docker.io
       location = "{{ podman_registry_mirror }}"
-  copy:
+  ansible.builtin.copy:
     content: "{{ registry_mirror }}"
     dest: /etc/containers/registries.conf.d/registry-mirror.conf
     mode: "0644"
@@ -46,14 +46,14 @@
       {% if podman_runtime_directory is not none %}
       runroot = {{ podman_runtime_directory }}
       {% endif %}
-  copy:
+  ansible.builtin.copy:
     content: "{{ config }}"
     dest: /etc/containers/storage.conf.d/storage.conf
     mode: "0644"
   when: podman_storage_driver is not none or podman_runtime_directory is not none
 
 - name: Ensure the path for CA file for podman registry exists
-  file:
+  ansible.builtin.file:
     path: "/etc/containers/certs.d/{{ podman_registry }}"
     owner: root
     group: root
@@ -66,14 +66,14 @@
     - not podman_registry_insecure | bool
 
 - name: Write kolla.conf to containers.conf.d
-  template:
+  ansible.builtin.template:
     src: "kolla.conf.j2"
     dest: "/etc/containers/containers.conf.d/kolla.conf"
     mode: "0664"
   become: true
 
 - name: Ensure the CA file for private registry exists
-  copy:
+  ansible.builtin.copy:
     src: "{{ private_registry_ca }}"
     dest: "/etc/containers/certs.d/{{ private_registry }}/ca.crt"
     owner: root
@@ -87,7 +87,7 @@
 
 - name: Copying over /run subdirectories conf
   become: true
-  template:
+  ansible.builtin.template:
     src: kolla-directories.conf.j2
     dest: /etc/tmpfiles.d/kolla.conf
     mode: "0644"

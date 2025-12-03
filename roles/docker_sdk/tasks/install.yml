@@ -1,47 +1,44 @@
 ---
 - name: Configure osbpo apt repository
+  become: true
   when:
     - ansible_facts.distribution == 'Debian'
     - docker_sdk_python_externally_managed | default(false)
     - virtualenv is none
   block:
     - name: Ensure apt sources list directory exists
-      file:
+      ansible.builtin.file:
         path: /etc/apt/sources.list.d
         state: directory
         recurse: true
-      become: true
 
     - name: Ensure apt keyrings directory exists
-      file:
+      ansible.builtin.file:
         path: /etc/apt/keyrings
         state: directory
         recurse: true
-      become: true
 
     - name: Install osbpo apt gpg key
-      template:
+      ansible.builtin.template:
         src: osbpo_pubkey.gpg.j2
         dest: /etc/apt/keyrings/osbpo.asc
         mode: "0644"
-      become: true
 
     - name: Enable osbpo apt repository
-      apt_repository:
+      ansible.builtin.apt_repository:
         repo: "{{ docker_sdk_osbpo_apt_repo }}"
         filename: osbpo
-      become: true
 
 - name: Install packages
-  package:
+  become: true
+  ansible.builtin.package:
     name: "{{ docker_sdk_packages | select | list }}"
     cache_valid_time: "{{ apt_cache_valid_time if ansible_facts.os_family == 'Debian' else omit }}"
     update_cache: "{{ True if ansible_facts.os_family == 'Debian' else omit }}"
     state: present
-  become: true
 
 - name: Check if virtualenv is a directory
-  stat:
+  ansible.builtin.stat:
     path: "{{ virtualenv }}"
   register: virtualenv_stat
   when: virtualenv is not none and virtualenv | length > 0
@@ -49,9 +46,10 @@
 # NOTE(kevko) Packaging needs to be installed before ansible's pip module is used
 # This is in case user created venv manually
 - name: Check if packaging is already installed
-  command: "{{ virtualenv }}/bin/pip show packaging"
   become: true
   become_user: "{{ docker_sdk_virtualenv_owner }}"
+  ansible.builtin.command:
+    cmd: "{{ virtualenv }}/bin/pip show packaging"
   register: packaging_installed
   failed_when: false
   changed_when: false
@@ -63,9 +61,10 @@
     - virtualenv_stat.stat.isdir
 
 - name: Install packaging into virtualenv
-  command: "{{ virtualenv }}/bin/python -m pip install packaging"
   become: true
   become_user: "{{ docker_sdk_virtualenv_owner }}"
+  ansible.builtin.command:
+    cmd: "{{ virtualenv }}/bin/python -m pip install packaging"
   check_mode: false
   changed_when: packaging_installed.rc != 0
   when:
@@ -76,7 +75,9 @@
     - packaging_installed.rc != 0
 
 - name: Install latest pip and packaging in the virtualenv
-  pip:
+  become: true
+  become_user: "{{ docker_sdk_virtualenv_owner }}"
+  ansible.builtin.pip:
     # NOTE(hrw) pip 19.3 is first version complaining about being run with Python 2
     name:
       - "pip>19.3"
@@ -84,18 +85,16 @@
     virtualenv: "{{ virtualenv }}"
     virtualenv_site_packages: "{{ virtualenv_site_packages }}"
     virtualenv_command: "{{ ansible_facts.python.executable }} -m venv"
-  become: true
-  become_user: "{{ docker_sdk_virtualenv_owner }}"
   when: virtualenv is not none
 
 - name: Install docker SDK for python using pip
-  pip:
+  become: true
+  become_user: "{{ virtualenv is none | ternary(omit, docker_sdk_virtualenv_owner) }}"
+  ansible.builtin.pip:
     name: "{{ docker_sdk_core_pip_packages + docker_sdk_additional_pip_packages }}"
     executable: "{{ (virtualenv is none) | ternary(ansible_facts.python.executable | regex_replace('python(\\d+(\\.\\d+)?)$', 'pip\\1'), omit) }}"
     extra_args: "{% if docker_sdk_upper_constraints_file %}-c {{ docker_sdk_upper_constraints_file }}{% endif %}"
     virtualenv: "{{ virtualenv is none | ternary(omit, virtualenv) }}"
     virtualenv_site_packages: "{{ virtualenv is none | ternary(omit, virtualenv_site_packages) }}"
     virtualenv_command: "{{ virtualenv is none | ternary(omit, ansible_facts.python.executable ~ ' -m venv') }}"
-  become: true
-  become_user: "{{ virtualenv is none | ternary(omit, docker_sdk_virtualenv_owner) }}"
   when: not (docker_sdk_python_externally_managed | default(false) and virtualenv is none)

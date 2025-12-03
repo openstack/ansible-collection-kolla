@@ -1,21 +1,21 @@
 ---
 - name: Reload docker service file
   become: true
-  systemd:
+  ansible.builtin.systemd:
     name: docker
     daemon_reload: true
   notify:
     - Restart docker
 
 - name: Restart docker
-  systemd:
+  become: true
+  ansible.builtin.systemd:
     name: docker
     state: "{{ 'reloaded' if docker_systemd_reload | bool else 'restarted' }}"
     masked: false
-  become: true
 
 - name: Restart containerd
-  service:
+  become: true
+  ansible.builtin.service:
     name: containerd
     state: restarted
-  become: true

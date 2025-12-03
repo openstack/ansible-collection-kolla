@@ -1,15 +1,15 @@
 ---
-- import_role:
+- ansible.builtin.import_role:
     name: openstack.kolla.etc_hosts
 
-- import_tasks: pre-install.yml
+- ansible.builtin.import_tasks: pre-install.yml
 
-- import_tasks: install.yml
+- ansible.builtin.import_tasks: install.yml
 
-- import_tasks: post-install.yml
+- ansible.builtin.import_tasks: post-install.yml
 
 - name: Configure ceph for zun
-  include_tasks: configure-ceph-for-zun.yml
+  ansible.builtin.include_tasks: configure-ceph-for-zun.yml
   when:
     - zun_configure_for_cinder_ceph | bool
     - "'zun-compute' in group_names"

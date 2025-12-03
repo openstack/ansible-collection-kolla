@@ -1,13 +1,13 @@
 ---
 - name: Ensure localhost in /etc/hosts
-  lineinfile:
+  become: true
+  ansible.builtin.lineinfile:
     dest: /etc/hosts
     regexp: "^127.0.0.1.*"
     line: "127.0.0.1 localhost"
     create: true
     mode: "0644"
     state: present
-  become: true
 
 # NOTE(mgoddard): Ubuntu may include a line in /etc/hosts that makes the local
 # hostname and fqdn point to 127.0.1.1. This can break
@@ -16,14 +16,15 @@
 # see https://bugs.launchpad.net/kolla-ansible/+bug/1837699
 # and https://bugs.launchpad.net/kolla-ansible/+bug/1862739
 - name: Ensure hostname does not point to 127.0.1.1 in /etc/hosts
-  lineinfile:
+  become: true
+  ansible.builtin.lineinfile:
     dest: /etc/hosts
     regexp: "^127.0.1.1\\b.*\\s{{ ansible_facts.hostname }}\\b"
     state: absent
-  become: true
 
 - name: Generate /etc/hosts for all of the nodes
-  blockinfile:
+  become: true
+  ansible.builtin.blockinfile:
     dest: /etc/hosts
     marker: "# {mark} ANSIBLE GENERATED HOSTS"
     block: |
@@ -43,7 +44,6 @@
         {{ 'api' | kolla_address(host, override_var="etc_hosts_api_address") }} {{ hostnames | unique | join(' ') }}
         {% endif %}
         {% endfor %}
-  become: true
   when:
     # Skip hosts in the bifrost group that do not have a valid api_interface.
     - inventory_hostname not in groups['bifrost'] or
@@ -57,12 +57,12 @@
   become: true
   block:
     - name: Check whether /etc/cloud/cloud.cfg exists
-      stat:
+      ansible.builtin.stat:
         path: /etc/cloud/cloud.cfg
       register: cloud_init
 
     - name: Disable cloud-init manage_etc_hosts
-      copy:
+      ansible.builtin.copy:
         content: "manage_etc_hosts: false"
         dest: /etc/cloud/cloud.cfg.d/99-kolla.cfg
         mode: "0660"

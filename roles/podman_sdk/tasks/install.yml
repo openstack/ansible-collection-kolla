@@ -7,32 +7,32 @@
     - virtualenv is none
   block:
     - name: Ensure apt sources list directory exists
-      file:
+      ansible.builtin.file:
         path: /etc/apt/sources.list.d
         state: directory
         recurse: true
 
     - name: Ensure apt keyrings directory exists
-      file:
+      ansible.builtin.file:
         path: /etc/apt/keyrings
         state: directory
         recurse: true
 
     - name: Install osbpo apt gpg key
-      template:
+      ansible.builtin.template:
         src: osbpo_pubkey.gpg.j2
         dest: /etc/apt/keyrings/osbpo.asc
         mode: "0644"
 
     - name: Ensure old osbpo apt repository absent
-      file:
+      ansible.builtin.file:
         path: /etc/apt/sources.list.d/osbpo.list
         state: absent
 
     # TODO(mmalchuk): replace with ansible.builtin.deb822_repository module
     # when all stable releases moves to the ansible-core >= 2.15
     - name: Enable osbpo apt repository
-      copy:
+      ansible.builtin.copy:
         dest: /etc/apt/sources.list.d/docker.sources
         content: |
             # Ansible managed
@@ -45,11 +45,11 @@
         mode: "0644"
 
     - name: Update the apt cache
-      apt:
+      ansible.builtin.apt:
         update_cache: true
 
 - name: Install packages
-  package:
+  ansible.builtin.package:
     name: "{{ podman_sdk_packages | select | list }}"
     cache_valid_time: "{{ apt_cache_valid_time if ansible_facts.os_family == 'Debian' else omit }}"
     update_cache: "{{ true if ansible_facts.os_family == 'Debian' else omit }}"
@@ -57,7 +57,7 @@
   become: true
 
 - name: Check if virtualenv is a directory
-  stat:
+  ansible.builtin.stat:
     path: "{{ virtualenv }}"
   register: virtualenv_stat
   when: virtualenv is not none and virtualenv | length > 0
@@ -65,7 +65,8 @@
 # NOTE(kevko) Packaging needs to be installed before ansible's pip module is used
 # This is in case user created venv manually
 - name: Check if packaging is already installed
-  command: "{{ virtualenv }}/bin/pip show packaging"
+  ansible.builtin.command:
+    cmd: "{{ virtualenv }}/bin/pip show packaging"
   become: true
   become_user: "{{ podman_sdk_virtualenv_owner }}"
   register: packaging_installed
@@ -79,7 +80,8 @@
     - virtualenv_stat.stat.isdir
 
 - name: Install packaging into virtualenv
-  command: "{{ virtualenv }}/bin/python -m pip install packaging"
+  ansible.builtin.command:
+    cmd: "{{ virtualenv }}/bin/python -m pip install packaging"
   become: true
   become_user: "{{ podman_sdk_virtualenv_owner }}"
   check_mode: false
@@ -92,7 +94,7 @@
     - packaging_installed.rc != 0
 
 - name: Install latest pip and packaging in the virtualenv
-  pip:
+  ansible.builtin.pip:
     # NOTE(hrw) pip 19.3 is first version complaining about being run with Python 2
     name:
       - "pip>19.3"
@@ -105,7 +107,7 @@
   when: virtualenv is not none
 
 - name: Install podman SDK for python
-  pip:
+  ansible.builtin.pip:
     name: "{{ podman_sdk_core_pip_packages + podman_sdk_additional_pip_packages }}"
     executable: "{{ (virtualenv is none) | ternary(ansible_facts.python.executable | regex_replace('python(\\d+(\\.\\d+)?)$', 'pip\\1'), omit) }}"
     extra_args: "{% if podman_sdk_upper_constraints_file %}-c {{ podman_sdk_upper_constraints_file }}{% endif %}"

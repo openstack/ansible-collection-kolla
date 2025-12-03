@@ -1,45 +1,45 @@
 ---
 - name: Ensuring CNI config directory exist
-  file:
+  become: true
+  ansible.builtin.file:
     path: "{{ cni_config_dir }}"
     state: "directory"
     mode: "0770"
     owner: "{{ config_owner_user }}"
     group: "{{ config_owner_group }}"
-  become: true
 
 - name: Copying CNI config file
-  template:
+  become: true
+  ansible.builtin.template:
     src: "10-zun-cni.conf.j2"
     dest: "{{ cni_config_dir }}/10-zun-cni.conf"
     mode: "0660"
     owner: "{{ config_owner_user }}"
     group: "{{ config_owner_group }}"
-  become: true
   notify:
     - Restart containerd
 
 - name: Ensuring CNI bin directory exist
-  file:
+  become: true
+  ansible.builtin.file:
     path: "{{ cni_bin_dir }}"
     state: "directory"
     mode: "0770"
     owner: "{{ config_owner_user }}"
     group: "{{ config_owner_group }}"
-  become: true
 
 - name: Copy zun-cni script
-  template:
+  become: true
+  ansible.builtin.template:
     src: "zun-cni.j2"
     dest: "{{ cni_bin_dir }}/zun-cni"
     mode: "0775"
-  become: true
 
 - name: Copying over containerd config
-  template:
+  become: true
+  ansible.builtin.template:
     src: "containerd_config.toml.j2"
     dest: "/etc/containerd/config.toml"
     mode: "0660"
-  become: true
   notify:
     - Restart containerd

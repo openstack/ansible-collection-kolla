@@ -1,5 +1,5 @@
 ---
-- include_tasks: "{{ package_action }}.yml"
+- ansible.builtin.include_tasks: "{{ package_action }}.yml"
 
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers

@@ -1,7 +1,7 @@
 ---
 - name: Ensure unprivileged users can use ping
   become: true
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.ping_group_range
     value: '0 2147483647'
     state: present

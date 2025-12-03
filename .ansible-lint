@@ -3,9 +3,6 @@ use_default_rules: true
 skip_list:
  # Experimental
  - experimental
- # Use FQCN
- - fqcn[action]
- - fqcn[action-core]
  # Galaxy changelog and runtime defined
  - galaxy[no-changelog]
  - galaxy[no-runtime]

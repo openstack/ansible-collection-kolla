@@ -1,5 +1,6 @@
 ---
 - name: Restart systemd-tmpfiles
   become: true
-  command: systemd-tmpfiles --create
+  ansible.builtin.command:
+    cmd: systemd-tmpfiles --create
   changed_when: true

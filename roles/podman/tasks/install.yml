@@ -2,20 +2,21 @@
 # Upgrading podman engine may cause containers to stop. Take a snapshot of the
 # running containers prior to a potential upgrade of Podman.
 - name: Check which containers are running
-  command: podman ps -f 'status=running' -q
   become: true
+  ansible.builtin.command:
+    cmd: podman ps -f 'status=running' -q
   # If Podman is not installed this command may exit non-zero.
   failed_when: false
   changed_when: false
   register: running_containers
 
 - name: Install packages
-  package:
+  become: true
+  ansible.builtin.package:
     name: "{{ podman_packages | select | list }}"
     cache_valid_time: "{{ apt_cache_valid_time if ansible_facts.os_family == 'Debian' else omit }}"
     update_cache: true
     state: present
-  become: true
   register: podman_install_result
 
 # If any packages were updated, and any containers were running, wait for the
@@ -23,7 +24,7 @@
 
 - name: Start podman.socket
   become: true
-  service:
+  ansible.builtin.service:
     name: podman.socket
     state: started
     enabled: true
@@ -34,8 +35,9 @@
     - running_containers.stdout != ''
   block:
     - name: Wait for Podman to start
-      command: podman info
       become: true
+      ansible.builtin.command:
+        cmd: podman info
       changed_when: false
       register: result
       until: result is success
@@ -43,8 +45,9 @@
       delay: 10
 
     - name: Ensure containers are running after Podman upgrade
-      command: "podman start {{ running_containers.stdout }}"
+      ansible.builtin.command:
+        cmd: "podman start {{ running_containers.stdout }}"
       become: true
       changed_when: true
 
-- import_tasks: config.yml
+- ansible.builtin.import_tasks: config.yml

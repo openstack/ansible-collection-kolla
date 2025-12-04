@@ -97,7 +97,7 @@
     path: /etc/systemd/system/docker.service.d/kolla.conf
     state: absent
   notify:
-    - Reload docker service file
+    - Restart docker
 
 - name: Ensure docker service directory exists
   become: true
@@ -123,7 +123,7 @@
     dest: /etc/systemd/system/docker.service.d/kolla.conf
     mode: "0644"
   notify:
-    - Reload docker service file
+    - Restart docker
 
 - name: Ensure the path for CA file for private registry exists
   become: true

@@ -96,7 +96,7 @@
     - not docker_https_proxy
     - not docker_no_proxy
   notify:
-    - Reload docker service file
+    - Restart docker
 
 - name: Ensure docker service directory exists
   become: true
@@ -122,7 +122,7 @@
     docker_https_proxy | length > 0 or
     docker_no_proxy | length > 0
   notify:
-    - Reload docker service file
+    - Restart docker
 
 - name: Ensure the path for CA file for private registry exists
   file:

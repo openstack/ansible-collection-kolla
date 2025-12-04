@@ -1,9 +1,10 @@
 ---
 - name: Install ceph-common
   become: true
-  when: ansible_facts.os_family == 'Debian'
   block:
-    - block:
+    - name: Install ceph-common (Debian)
+      when: ansible_facts.os_family == 'Debian'
+      block:
         - name: Ensure apt sources list directory exists
           ansible.builtin.file:
             path: /etc/apt/sources.list.d
@@ -49,7 +50,7 @@
             state: present
             update_cache: true
 
-    - become: true
+    - name: Install ceph-common (RedHat)
       when: ansible_facts.os_family == 'RedHat'
       block:
         - name: Enable ceph yum repository

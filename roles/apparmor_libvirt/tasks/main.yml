@@ -1,5 +1,6 @@
 ---
-- ansible.builtin.include_tasks: remove-profile.yml
+- name: "Include tasks from remove-profile.yml"
+  ansible.builtin.include_tasks: remove-profile.yml
   when:
     - ansible_facts.distribution == "Ubuntu"
     - apparmor_remove_libvirt_profile | bool

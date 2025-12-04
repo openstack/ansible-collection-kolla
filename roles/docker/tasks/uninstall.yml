@@ -55,7 +55,8 @@
     path: "{{ cni_config_dir }}"
     state: absent
 
-- block:
+- name: Cleanup
+  block:
     # NOTE(mhiner): cleanup is best effort because sometimes there are still
     # qemu-kvm processes running that prevent the removal
     - name: Cleanup docker files

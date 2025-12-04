@@ -29,7 +29,8 @@
     state: started
     enabled: true
 
-- when:
+- name: Check containers after upgrade
+  when:
     - podman_install_result.changed
     - running_containers.rc == 0
     - running_containers.stdout != ''
@@ -50,4 +51,5 @@
       become: true
       changed_when: true
 
-- ansible.builtin.import_tasks: config.yml
+- name: Configure
+  ansible.builtin.import_tasks: config.yml

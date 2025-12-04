@@ -1,2 +1,3 @@
 ---
-- ansible.builtin.include_tasks: "{{ package_action }}.yml"
+- name: Install/Uninstall
+  ansible.builtin.include_tasks: "{{ package_action }}.yml"

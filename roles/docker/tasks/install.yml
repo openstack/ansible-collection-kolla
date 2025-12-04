@@ -1,5 +1,6 @@
 ---
-- ansible.builtin.include_tasks: "repo-{{ ansible_facts.os_family }}.yml"
+- name: Enable Docker repository
+  ansible.builtin.include_tasks: "repo-{{ ansible_facts.os_family }}.yml"
   when: enable_docker_repo | bool
 
 # Upgrading docker engine may cause containers to stop. Take a snapshot of the
@@ -16,7 +17,8 @@
 
 # APT starts Docker engine right after installation, which creates
 # iptables rules before we disable iptables in Docker config
-- when: ansible_facts.os_family == 'Debian'
+- name: Mask docker systemd unit on Debian/Ubuntu
+  when: ansible_facts.os_family == 'Debian'
   block:
     - name: Check if docker systemd unit exists
       ansible.builtin.stat:
@@ -45,7 +47,8 @@
 # If any packages were updated, and any containers were running, wait for the
 # daemon to come up and start all previously running containers.
 
-- become: true
+- name: Check if containers are running after upgrade
+  become: true
   when:
     - docker_install_result is changed
     - running_containers.rc == 0
@@ -75,9 +78,11 @@
         cmd: "docker start {{ running_containers.stdout }}"
       changed_when: true
 
-- ansible.builtin.import_tasks: config.yml
+- name: Configure
+  ansible.builtin.import_tasks: config.yml
 
-- ansible.builtin.include_tasks: configure-containerd-for-zun.yml
+- name: Configure containerd for Zun
+  ansible.builtin.include_tasks: configure-containerd-for-zun.yml
   when:
     - containerd_configure_for_zun|bool
     - "'zun-cni-daemon' in group_names"

@@ -6,7 +6,5 @@ skip_list:
  # Galaxy changelog and runtime defined
  - galaxy[no-changelog]
  - galaxy[no-runtime]
- # All tasks should be named
- - name[missing]
  # Variables names from within roles should use role_name_ as a prefix
  - var-naming[no-role-prefix]

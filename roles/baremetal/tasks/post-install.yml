@@ -1,9 +1,11 @@
 ---
-- ansible.builtin.import_role:
+- name: Import kolla_user role
+  ansible.builtin.import_role:
     name: openstack.kolla.kolla_user
   when: create_kolla_user | bool
 
-- ansible.builtin.import_role:
+- name: Import container_engine sdk role
+  ansible.builtin.import_role:
     name: openstack.kolla.{{ container_engine }}_sdk
 
 - name: Ensure node_config_directory directory exists
@@ -15,7 +17,8 @@
     group: "{{ kolla_group if create_kolla_user | bool else omit }}"
     mode: "0755"
 
-- ansible.builtin.import_role:
+- name: Import apparmor_libvirt role
+  ansible.builtin.import_role:
     name: openstack.kolla.apparmor_libvirt
 
 - name: Change state of selinux

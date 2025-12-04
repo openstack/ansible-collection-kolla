@@ -1,12 +1,16 @@
 ---
-- ansible.builtin.import_role:
+- name: Import etc_hosts role
+  ansible.builtin.import_role:
     name: openstack.kolla.etc_hosts
 
-- ansible.builtin.import_tasks: pre-install.yml
+- name: Pre-install
+  ansible.builtin.import_tasks: pre-install.yml
 
-- ansible.builtin.import_tasks: install.yml
+- name: Install
+  ansible.builtin.import_tasks: install.yml
 
-- ansible.builtin.import_tasks: post-install.yml
+- name: Post-install
+  ansible.builtin.import_tasks: post-install.yml
 
 - name: Configure ceph for zun
   ansible.builtin.include_tasks: configure-ceph-for-zun.yml

@@ -38,6 +38,8 @@
     state: present
 
 - name: Check if virtualenv is a directory
+  become: true
+  become_user: "{{ docker_sdk_virtualenv_owner }}"
   ansible.builtin.stat:
     path: "{{ virtualenv }}"
   register: virtualenv_stat

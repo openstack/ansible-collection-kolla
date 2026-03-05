@@ -69,8 +69,8 @@
   ansible.builtin.set_fact:
     docker_storage_containerd: >-
       {{
-        (docker_system_info_json.ServerVersion | default('0.0.0', true))
-          is version('29.0.0', '>=')
+        docker_system_info_json.Driver == 'overlayfs' and
+        dict(docker_system_info_json.DriverStatus).get('driver-type') == 'io.containerd.snapshotter.v1'
       }}
 
 - name: Copying over containerd config

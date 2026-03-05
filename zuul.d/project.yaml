@@ -7,18 +7,24 @@
       - release-notes-jobs-python3
     check:
       jobs:
-        - kolla-ansible-debian-bookworm:
+        - kolla-ansible-debian-trixie:
             files: &ack_files
               - roles/
-        - kolla-ansible-debian-bookworm-podman:
+        - kolla-ansible-debian-trixie-podman:
+            files: *ack_files
+        - kolla-ansible-debian-bookworm-upgrade:
             files: *ack_files
         - kolla-ansible-rocky-10:
+            files: *ack_files
+        - kolla-ansible-rocky-10-upgrade:
             files: *ack_files
         - kolla-ansible-rocky-10-podman:
             files: *ack_files
         - kolla-ansible-ubuntu-noble:
             files: *ack_files
         - kolla-ansible-ubuntu-noble-podman:
+            files: *ack_files
+        - kolla-ansible-ubuntu-noble-upgrade:
             files: *ack_files
         - kayobe-overcloud-host-configure-rocky10
         - kayobe-overcloud-host-configure-ubuntu-noble
@@ -28,21 +34,28 @@
         - kayobe-overcloud-ubuntu-noble-podman
     check-arm64:
       jobs:
-        - kolla-ansible-debian-bookworm-aarch64
-        - kolla-ansible-debian-bookworm-aarch64-podman
+        - kolla-ansible-debian-trixie-aarch64
+        - kolla-ansible-debian-trixie-aarch64-podman
+        - kolla-ansible-debian-bookworm-aarch64-upgrade
     gate:
       jobs:
-        - kolla-ansible-debian-bookworm:
+        - kolla-ansible-debian-trixie:
             files: *ack_files
-        - kolla-ansible-debian-bookworm-podman:
+        - kolla-ansible-debian-trixie-podman:
+            files: *ack_files
+        - kolla-ansible-debian-bookworm-upgrade:
             files: *ack_files
         - kolla-ansible-rocky-10:
+            files: *ack_files
+        - kolla-ansible-rocky-10-upgrade:
             files: *ack_files
         - kolla-ansible-rocky-10-podman:
             files: *ack_files
         - kolla-ansible-ubuntu-noble:
             files: *ack_files
         - kolla-ansible-ubuntu-noble-podman:
+            files: *ack_files
+        - kolla-ansible-ubuntu-noble-upgrade:
             files: *ack_files
         - kayobe-overcloud-host-configure-rocky10
         - kayobe-overcloud-host-configure-ubuntu-noble

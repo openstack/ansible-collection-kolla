@@ -60,6 +60,7 @@
   ansible.builtin.command:
     cmd: "docker system info -f json"
   changed_when: false
+  check_mode: false
   register: docker_system_info
 
 - name: Parse Docker system info

@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    Fixes execution of the Docker role when using Ansible check mode.
+    `LP#2144003
+    <https://bugs.launchpad.net/ansible-collection-kolla/+bug/2144003>`__

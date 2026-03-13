@@ -49,6 +49,11 @@ podman_healthcheck_events: false
 # docker_log_max_size
 podman_log_max_size: 52428800
 
+# Proxy settings for podman
+podman_http_proxy: ""
+podman_https_proxy: ""
+podman_no_proxy: ""
+
 podman_engine_config:
   engine:
     events_logger: "file"

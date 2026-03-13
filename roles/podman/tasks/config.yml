@@ -92,3 +92,35 @@
     dest: /etc/tmpfiles.d/kolla.conf
     mode: "0644"
   notify: Restart systemd-tmpfiles
+
+- name: Remove podman service configuration
+  become: true
+  ansible.builtin.file:
+    path: /etc/systemd/system/podman.service.d/kolla.conf
+    state: absent
+  when:
+    - not podman_http_proxy
+    - not podman_https_proxy
+    - not podman_no_proxy
+  notify: Reload podman service file
+
+- name: Configure podman service with proxy settings
+  when: >
+    podman_http_proxy | length > 0 or
+    podman_https_proxy | length > 0 or
+    podman_no_proxy | length > 0
+  block:
+    - name: Ensure podman service directory exists
+      become: true
+      ansible.builtin.file:
+        path: /etc/systemd/system/podman.service.d
+        state: directory
+        recurse: true
+
+    - name: Configure podman service proxy config file
+      become: true
+      ansible.builtin.template:
+        src: podman_systemd_service.j2
+        dest: /etc/systemd/system/podman.service.d/kolla.conf
+        mode: "0644"
+      notify: Reload podman service file

@@ -75,6 +75,18 @@
         dict(docker_system_info_json.DriverStatus).get('driver-type') == 'io.containerd.snapshotter.v1'
       }}
 
+- name: Ensure /etc/containerd exists
+  become: true
+  when:
+    - docker_storage_containerd | bool
+    - not containerd_configure_for_zun | bool
+  ansible.builtin.file:
+    path: /etc/containerd
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
 - name: Copying over containerd config
   become: true
   when:

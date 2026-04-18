@@ -35,6 +35,15 @@
     dest: "{{ cni_bin_dir }}/zun-cni"
     mode: "0775"
 
+- name: Ensure /etc/containerd exists
+  become: true
+  ansible.builtin.file:
+    path: /etc/containerd
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
 - name: Copying over containerd config
   become: true
   ansible.builtin.template:

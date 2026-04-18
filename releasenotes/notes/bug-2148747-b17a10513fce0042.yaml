@@ -1,0 +1,7 @@
+---
+fixes:
+  - |
+    Fixes a failure during containerd configuration when
+    ``/etc/containerd`` directory did not exist.
+    `LP#2148747
+    <https://bugs.launchpad.net/ansible-collection-kolla/+bug/2148747>`__

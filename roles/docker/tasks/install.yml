@@ -80,9 +80,3 @@
 
 - name: Configure
   ansible.builtin.import_tasks: config.yml
-
-- name: Configure containerd for Zun
-  ansible.builtin.include_tasks: configure-containerd-for-zun.yml
-  when:
-    - containerd_configure_for_zun|bool
-    - "'zun-cni-daemon' in group_names"

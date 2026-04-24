@@ -34,7 +34,6 @@
       debug: "{{ docker_debug }}"
     docker_config: >-
       {{ default_docker_config
-         | combine(docker_zun_config if docker_configure_for_zun | bool and 'zun-compute' in group_names else {})
          | combine(docker_config_insecure_registries if docker_registry_insecure | bool else {})
          | combine(docker_config_registry_mirror if docker_registry_mirrors | length > 0 else {})
          | combine(docker_config_storage_driver if docker_storage_driver | length > 0 else {})
@@ -79,7 +78,6 @@
   become: true
   when:
     - docker_storage_containerd | bool
-    - not containerd_configure_for_zun | bool
   ansible.builtin.file:
     path: /etc/containerd
     state: directory
@@ -91,7 +89,6 @@
   become: true
   when:
     - docker_storage_containerd | bool
-    - not containerd_configure_for_zun | bool
   ansible.builtin.template:
     src: "containerd_config.toml.j2"
     dest: "/etc/containerd/config.toml"
@@ -102,7 +99,6 @@
 - name: Remove old docker options file
   become: true
   when:
-    - not docker_configure_for_zun | bool or 'zun-compute' not in group_names
     - not docker_http_proxy
     - not docker_https_proxy
     - not docker_no_proxy
@@ -115,7 +111,6 @@
 - name: Ensure docker service directory exists
   become: true
   when: >
-    (docker_configure_for_zun | bool and 'zun-compute' in group_names) or
     docker_http_proxy | length > 0 or
     docker_https_proxy | length > 0 or
     docker_no_proxy | length > 0
@@ -127,7 +122,6 @@
 - name: Configure docker service
   become: true
   when: >
-    (docker_configure_for_zun | bool and 'zun-compute' in group_names) or
     docker_http_proxy | length > 0 or
     docker_https_proxy | length > 0 or
     docker_no_proxy | length > 0

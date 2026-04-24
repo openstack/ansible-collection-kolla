@@ -11,9 +11,3 @@
 
 - name: Post-install
   ansible.builtin.import_tasks: post-install.yml
-
-- name: Configure ceph for zun
-  ansible.builtin.include_tasks: configure-ceph-for-zun.yml
-  when:
-    - zun_configure_for_cinder_ceph | bool
-    - "'zun-compute' in group_names"

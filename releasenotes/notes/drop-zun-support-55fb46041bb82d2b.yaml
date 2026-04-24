@@ -1,0 +1,5 @@
+---
+upgrade:
+  - |
+    Support for configuring docker and containerd for ``zun`` is dropped due to
+    support for that project being removed in Kolla-Ansible.

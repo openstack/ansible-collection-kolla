@@ -26,17 +26,26 @@
             files: *ack_files
         - kolla-ansible-ubuntu-noble-upgrade:
             files: *ack_files
-        - kayobe-overcloud-host-configure-rocky10
-        - kayobe-overcloud-host-configure-ubuntu-noble
-        - kayobe-overcloud-rocky10
-        - kayobe-overcloud-rocky10-podman
-        - kayobe-overcloud-ubuntu-noble
-        - kayobe-overcloud-ubuntu-noble-podman
+        - kayobe-overcloud-host-configure-rocky10:
+            files: *ack_files
+        - kayobe-overcloud-host-configure-ubuntu-noble:
+            files: *ack_files
+        - kayobe-overcloud-rocky10:
+            files: *ack_files
+        - kayobe-overcloud-rocky10-podman:
+            files: *ack_files
+        - kayobe-overcloud-ubuntu-noble:
+            files: *ack_files
+        - kayobe-overcloud-ubuntu-noble-podman:
+            files: *ack_files
     check-arm64:
       jobs:
-        - kolla-ansible-debian-trixie-aarch64
-        - kolla-ansible-debian-trixie-aarch64-podman
-        - kolla-ansible-debian-bookworm-aarch64-upgrade
+        - kolla-ansible-debian-trixie-aarch64:
+            files: *ack_files
+        - kolla-ansible-debian-trixie-aarch64-podman:
+            files: *ack_files
+        - kolla-ansible-debian-bookworm-aarch64-upgrade:
+            files: *ack_files
     gate:
       jobs:
         - kolla-ansible-debian-trixie:
@@ -57,9 +66,15 @@
             files: *ack_files
         - kolla-ansible-ubuntu-noble-upgrade:
             files: *ack_files
-        - kayobe-overcloud-host-configure-rocky10
-        - kayobe-overcloud-host-configure-ubuntu-noble
-        - kayobe-overcloud-rocky10
-        - kayobe-overcloud-rocky10-podman
-        - kayobe-overcloud-ubuntu-noble
-        - kayobe-overcloud-ubuntu-noble-podman
+        - kayobe-overcloud-host-configure-rocky10:
+            files: *ack_files
+        - kayobe-overcloud-host-configure-ubuntu-noble:
+            files: *ack_files
+        - kayobe-overcloud-rocky10:
+            files: *ack_files
+        - kayobe-overcloud-rocky10-podman:
+            files: *ack_files
+        - kayobe-overcloud-ubuntu-noble:
+            files: *ack_files
+        - kayobe-overcloud-ubuntu-noble-podman:
+            files: *ack_files

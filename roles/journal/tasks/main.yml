@@ -1,0 +1,31 @@
+---
+- name: Configure persistent systemd journal on RedHat
+  when:
+    - ansible_facts.os_family == 'RedHat'
+    - journal_persistent | bool
+  notify: Restart systemd-journald
+  become: true
+  block:
+    - name: Ensure /etc/systemd/journald.conf.d exists
+      ansible.builtin.file:
+        path: /etc/systemd/journald.conf.d
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Template out kolla.conf
+      ansible.builtin.template:
+        src: templates/kolla.conf.j2
+        dest: /etc/systemd/journald.conf.d/kolla.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Ensure /var/log/journal directory exists
+      ansible.builtin.file:
+        path: /var/log/journal
+        state: directory
+        owner: root
+        group: systemd-journal
+        mode: '2755'

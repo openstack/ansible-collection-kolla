@@ -1,0 +1,7 @@
+---
+fixes:
+  - |
+    ``kernel-modules-extra`` is now installed by default on ``RedHat`` family,
+    see
+    `GH issue <https://github.com/docker/docker-ce-packaging/issues/1340>`__
+    for details.

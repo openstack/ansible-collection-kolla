@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    Install ``kernel-modules-extra-matched`` to ensure the correct package is
+    installed when running a debug kernel on Rocky Linux 10.
+    `LP#2163149 <https://bugs.launchpad.net/ansible-collection-kolla/+bug/2163149>`__

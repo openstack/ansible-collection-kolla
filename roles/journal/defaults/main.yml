@@ -1,0 +1,8 @@
+---
+journal_persistent: "{{ enable_fluentd_systemd | bool }}"
+# NOTE(mnasiadka): Compression disabled because fluentd segfaults on zstd on EL10
+journal_compress: false
+journal_maxretentionsec: 1month
+journal_storage: persistent
+journal_systemmaxuse: 2G
+journal_systemmaxfilesize: 200M

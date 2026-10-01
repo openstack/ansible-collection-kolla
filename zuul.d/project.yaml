@@ -12,7 +12,7 @@
               - roles/
         - kolla-ansible-debian-trixie-podman:
             files: *ack_files
-        - kolla-ansible-debian-bookworm-upgrade:
+        - kolla-ansible-debian-trixie-upgrade:
             files: *ack_files
         - kolla-ansible-rocky-10:
             files: *ack_files
@@ -44,7 +44,7 @@
             files: *ack_files
         - kolla-ansible-debian-trixie-aarch64-podman:
             files: *ack_files
-        - kolla-ansible-debian-bookworm-aarch64-upgrade:
+        - kolla-ansible-debian-trixie-aarch64-upgrade:
             files: *ack_files
     gate:
       jobs:
@@ -52,7 +52,7 @@
             files: *ack_files
         - kolla-ansible-debian-trixie-podman:
             files: *ack_files
-        - kolla-ansible-debian-bookworm-upgrade:
+        - kolla-ansible-debian-trixie-upgrade:
             files: *ack_files
         - kolla-ansible-rocky-10:
             files: *ack_files

@@ -8,3 +8,5 @@ skip_list:
  - galaxy[no-runtime]
  # Variables names from within roles should use role_name_ as a prefix
  - var-naming[no-role-prefix]
+ # Temporarily until a bug in Zuul collections support is fixed
+ - fqcn[action-core]

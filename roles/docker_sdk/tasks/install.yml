@@ -20,7 +20,7 @@
 - name: Check if packaging is already installed
   become: true
   become_user: "{{ docker_sdk_virtualenv_owner }}"
-  ansible.builtin.command:
+  command:
     cmd: "{{ virtualenv }}/bin/pip show packaging"
   register: packaging_installed
   failed_when: false
@@ -35,7 +35,7 @@
 - name: Install packaging into virtualenv
   become: true
   become_user: "{{ docker_sdk_virtualenv_owner }}"
-  ansible.builtin.command:
+  command:
     cmd: "{{ virtualenv }}/bin/python -m pip install packaging"
   check_mode: false
   changed_when: packaging_installed.rc != 0

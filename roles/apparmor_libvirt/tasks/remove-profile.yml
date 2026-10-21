@@ -10,7 +10,7 @@
   register: apparmor_libvirtd_disable_profile
 
 - name: Remove apparmor profile for libvirt
-  ansible.builtin.shell:
+  shell:
     cmd: |
       apparmor_parser -v -R /etc/apparmor.d/usr.sbin.libvirtd && \
       ln -vsf /etc/apparmor.d/usr.sbin.libvirtd /etc/apparmor.d/disable

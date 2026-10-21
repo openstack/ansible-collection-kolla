@@ -1,7 +1,7 @@
 ---
 - name: Configure journal tmpfiles
   become: true
-  ansible.builtin.command:
+  command:
     cmd: systemd-tmpfiles --create --prefix /var/log/journal
   changed_when: false
   listen: Restart systemd-journald
@@ -15,7 +15,7 @@
 
 - name: Flush journal to persistent storage
   become: true
-  ansible.builtin.command:
+  command:
     cmd: journalctl --flush
   changed_when: false
   listen: Restart systemd-journald

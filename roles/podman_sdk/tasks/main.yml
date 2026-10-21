@@ -3,7 +3,7 @@
   when: ansible_facts.python.version.major == 3 and ansible_facts.python.version.minor >= 10
   block:
     - name: Get Python
-      ansible.builtin.command:
+      command:
         cmd: "{{ ansible_facts.python.executable }} -c 'import sysconfig; print(sysconfig.get_path(\"stdlib\", sysconfig.get_default_scheme()))'"
       changed_when: false
       register: python_default_scheme_path

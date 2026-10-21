@@ -1,6 +1,6 @@
 ---
 - name: Check for leftover containers
-  ansible.builtin.command:
+  command:
     cmd: podman ps -q
   become: true
   changed_when: false
@@ -8,7 +8,7 @@
   register: containers
 
 - name: Check for leftover volumes
-  ansible.builtin.command:
+  command:
     cmd: podman volume ls -q
   become: true
   changed_when: false

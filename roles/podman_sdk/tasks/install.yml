@@ -67,7 +67,7 @@
 # NOTE(kevko) Packaging needs to be installed before ansible's pip module is used
 # This is in case user created venv manually
 - name: Check if packaging is already installed
-  ansible.builtin.command:
+  command:
     cmd: "{{ virtualenv }}/bin/pip show packaging"
   become: true
   become_user: "{{ podman_sdk_virtualenv_owner }}"
@@ -82,7 +82,7 @@
     - virtualenv_stat.stat.isdir
 
 - name: Install packaging into virtualenv
-  ansible.builtin.command:
+  command:
     cmd: "{{ virtualenv }}/bin/python -m pip install packaging"
   become: true
   become_user: "{{ podman_sdk_virtualenv_owner }}"

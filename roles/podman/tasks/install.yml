@@ -3,7 +3,7 @@
 # running containers prior to a potential upgrade of Podman.
 - name: Check which containers are running
   become: true
-  ansible.builtin.command:
+  command:
     cmd: podman ps -f 'status=running' -q
   # If Podman is not installed this command may exit non-zero.
   failed_when: false
@@ -37,7 +37,7 @@
   block:
     - name: Wait for Podman to start
       become: true
-      ansible.builtin.command:
+      command:
         cmd: podman info
       changed_when: false
       register: result
@@ -46,7 +46,7 @@
       delay: 10
 
     - name: Ensure containers are running after Podman upgrade
-      ansible.builtin.command:
+      command:
         cmd: "podman start {{ running_containers.stdout }}"
       become: true
       changed_when: true

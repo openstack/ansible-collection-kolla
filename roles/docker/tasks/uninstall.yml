@@ -1,7 +1,7 @@
 ---
 - name: Check for leftover containers
   become: true
-  ansible.builtin.command:
+  command:
     cmd: docker ps -q
   changed_when: false
   failed_when: false
@@ -9,7 +9,7 @@
 
 - name: Check for leftover volumes
   become: true
-  ansible.builtin.command:
+  command:
     cmd: docker volume ls -q
   changed_when: false
   failed_when: false

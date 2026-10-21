@@ -1,0 +1,10 @@
+---
+# TODO(mnasiadka): remove once Zuul injects zuul_log_id via a
+# callback hook instead of relying on action resolution reaching
+# ansible.legacy (tracked upstream in zuul/zuul). Without this,
+# collection-hosted roles never get 'ansible.legacy' in their default
+# collection search list, so bare command/shell tasks here would fall
+# through to the real, unmodified ansible-core action and fail with
+# "zuul_log_id missing" under Zuul CI.
+collections:
+  - ansible.legacy

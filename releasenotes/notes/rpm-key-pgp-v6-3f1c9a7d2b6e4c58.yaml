@@ -1,0 +1,8 @@
+---
+fixes:
+  - |
+    Fixes installation of Docker and Ceph repository GPG keys on Rocky
+    Linux 10.3 (and other EL 10 releases shipping OpenPGP v6 keys) with
+    ansible-core 2.19. The ``ansible.builtin.rpm_key`` module is no longer
+    used, keys are now downloaded to ``/etc/pki/rpm-gpg`` and imported with
+    ``rpm --import``.

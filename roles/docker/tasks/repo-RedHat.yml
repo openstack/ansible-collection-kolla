@@ -19,9 +19,23 @@
     # https://bugzilla.redhat.com/show_bug.cgi?id=1734081
     module_hotfixes: true
 
+- name: Download docker rpm gpg key
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ docker_yum_gpgkey }}"
+    dest: "/etc/pki/rpm-gpg/RPM-GPG-KEY-docker"
+    mode: "0644"
+    force: true
+  register: docker_yum_gpgkey_download
+  when: docker_yum_gpgcheck | bool
+
+# NOTE(mnasiadka): ansible.builtin.rpm_key in ansible-core 2.19 parses all
+# keys from the rpm database with gpg, which fails on OpenPGP v6 keys (e.g.
+# post-quantum keys shipped in Rocky Linux 10.3).
 - name: Install docker rpm gpg key
   become: true
-  ansible.builtin.rpm_key:
-    state: present
-    key: "{{ docker_yum_gpgkey }}"
+  # noqa command-instead-of-module
+  command:
+    cmd: "rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-docker"
+  changed_when: docker_yum_gpgkey_download is changed
   when: docker_yum_gpgcheck | bool
